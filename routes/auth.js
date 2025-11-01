@@ -45,30 +45,59 @@ router.post('/register', [
 
     const { firstName, lastName, email, password, phone } = req.body;
 
-    // Check if user already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
+    // Normalize email for consistency (schema already lowercases, but normalize for consistency)
+    const normalizedEmail = email.toLowerCase().trim();
+
+    // Check for duplicate email (email field has unique index and lowercase transformation in schema)
+    const existingUserByEmail = await User.findOne({ email: normalizedEmail });
+    
+    if (existingUserByEmail) {
       return res.status(400).json({
         success: false,
-        message: 'User already exists with this email'
+        message: 'User already exists with this email address',
+        field: 'email'
       });
     }
 
-    // Create user
+    // Check for duplicate phone number (if provided)
+    if (phone) {
+      const normalizedPhone = phone.trim();
+      const existingUserByPhone = await User.findOne({ phone: normalizedPhone });
+      
+      if (existingUserByPhone) {
+        return res.status(400).json({
+          success: false,
+          message: 'User already exists with this phone number',
+          field: 'phone'
+        });
+      }
+    }
+
+    // Find or create default user role
+    let defaultRole = await Role.findOne({ name: 'user' });
+    
+    // If user role doesn't exist, create it (fallback)
+    if (!defaultRole) {
+      console.warn('User role not found, creating default user role...');
+      defaultRole = await Role.create({
+        name: 'user',
+        displayName: 'User',
+        description: 'Standard user with basic permissions',
+        level: 1,
+        isSystemRole: true,
+        isActive: true
+      });
+    }
+
+    // Create user with default role
     const user = await User.create({
       firstName,
       lastName,
-      email,
+      email: normalizedEmail, // Use normalized email
       password,
-      phone
+      phone: phone ? phone.trim() : phone, // Normalize phone if provided
+      roles: [defaultRole._id] // Assign user role by default
     });
-
-    // Assign default role (user role)
-    const defaultRole = await Role.findOne({ name: 'user' });
-    if (defaultRole) {
-      user.roles.push(defaultRole._id);
-      await user.save();
-    }
 
     // Generate tokens
     const token = generateToken({ id: user._id });

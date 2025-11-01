@@ -1,5 +1,6 @@
 const Role = require('../models/Role');
 const Permission = require('../models/Permission');
+const User = require('../models/User');
 
 // Default permissions
 const defaultPermissions = [
@@ -136,10 +137,91 @@ const seedDatabase = async () => {
       }
     }
 
+    // Create default users
+    console.log('Creating default users...');
+    await createDefaultUsers(createdRoles);
+
     console.log('Database seeding completed successfully!');
     return { permissions: createdPermissions, roles: createdRoles };
   } catch (error) {
     console.error('Error seeding database:', error);
+    throw error;
+  }
+};
+
+const createDefaultUsers = async (roles) => {
+  try {
+    // Find roles by name
+    const userRole = roles.find(r => r.name === 'user');
+    const adminRole = roles.find(r => r.name === 'admin');
+
+    if (!userRole || !adminRole) {
+      console.log('Roles not found, skipping user creation');
+      return;
+    }
+
+    // Create regular user
+    const regularUserData = {
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'user@example.com',
+      password: 'User@123456', // Default password - should be changed after first login
+      isEmailVerified: true
+    };
+
+    const existingRegularUser = await User.findOne({ email: regularUserData.email });
+    if (!existingRegularUser) {
+      const regularUser = await User.create(regularUserData);
+      regularUser.roles.push(userRole._id);
+      await regularUser.save();
+      console.log(`✓ Created regular user: ${regularUser.email} (Password: User@123456)`);
+    } else {
+      // Update roles if user exists
+      if (!existingRegularUser.roles.includes(userRole._id)) {
+        existingRegularUser.roles.push(userRole._id);
+        await existingRegularUser.save();
+      }
+      console.log(`Regular user already exists: ${existingRegularUser.email}`);
+    }
+
+    // Create admin user
+    const adminUserData = {
+      firstName: 'Admin',
+      lastName: 'User',
+      email: 'admin@example.com',
+      password: 'Admin@123456', // Default password - should be changed after first login
+      isEmailVerified: true
+    };
+
+    const existingAdminUser = await User.findOne({ email: adminUserData.email });
+    if (!existingAdminUser) {
+      const adminUser = await User.create(adminUserData);
+      adminUser.roles.push(adminRole._id);
+      await adminUser.save();
+      console.log(`✓ Created admin user: ${adminUser.email} (Password: Admin@123456)`);
+    } else {
+      // Update roles if user exists
+      if (!existingAdminUser.roles.includes(adminRole._id)) {
+        existingAdminUser.roles.push(adminRole._id);
+        await existingAdminUser.save();
+      }
+      console.log(`Admin user already exists: ${existingAdminUser.email}`);
+    }
+
+    console.log('\n📋 Default Users Credentials:');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('Regular User:');
+    console.log('  Email: user@example.com');
+    console.log('  Password: User@123456');
+    console.log('  Role: user');
+    console.log('\nAdmin User:');
+    console.log('  Email: admin@example.com');
+    console.log('  Password: Admin@123456');
+    console.log('  Role: admin');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('⚠️  IMPORTANT: Change these passwords after first login!\n');
+  } catch (error) {
+    console.error('Error creating default users:', error);
     throw error;
   }
 };

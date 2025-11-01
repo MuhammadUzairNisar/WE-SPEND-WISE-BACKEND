@@ -104,6 +104,32 @@ A comprehensive Node.js backend API with authentication, authorization, roles, a
    npm start
    ```
 
+## Postman Collection
+
+A complete Postman collection is available for testing the API:
+
+📁 **Location:** `postman/` folder
+
+### Import into Postman:
+
+1. Open Postman
+2. Click **Import**
+3. Import both files:
+   - `We_Spend_Wise_API.postman_collection.json`
+   - `We_Spend_Wise_Environment.postman_environment.json`
+4. Select the **"We Spend Wise - Development"** environment
+5. Start testing!
+
+### Features:
+
+- ✅ All API endpoints pre-configured
+- ✅ Automatic token management
+- ✅ Default test credentials included
+- ✅ Environment variables setup
+- ✅ Example requests and responses
+
+📖 See `postman/README.md` for detailed usage instructions.
+
 ## API Endpoints
 
 ### Authentication
@@ -170,6 +196,24 @@ The system comes with pre-configured roles and permissions:
 - **Dashboard** - Dashboard access
 - **Settings** - System settings
 
+## Default Users
+
+The system automatically creates two default users on startup (in development mode):
+
+### Regular User
+- **Email:** `user@example.com`
+- **Password:** `User@123456`
+- **Role:** User
+- **Access:** Basic user permissions
+
+### Admin User
+- **Email:** `admin@example.com`
+- **Password:** `Admin@123456`
+- **Role:** Admin
+- **Access:** Administrative permissions
+
+⚠️ **Important:** Change these passwords immediately after first login in production!
+
 ## Authentication
 
 The API uses JWT (JSON Web Tokens) for authentication. Include the token in the Authorization header:
@@ -203,6 +247,28 @@ The API returns consistent error responses:
   "errors": [] // Validation errors (if any)
 }
 ```
+
+## Flutter Integration
+
+Complete Flutter integration guide is available for registering and logging in users.
+
+📁 **Location:** `flutter-integration/` folder
+
+### Files:
+- **`FLUTTER_INTEGRATION_GUIDE.md`** - Complete step-by-step guide with full code examples
+- **`QUICK_START_PROMPT.md`** - Quick reference prompt with API details and code snippets
+
+### Includes:
+- ✅ Dio HTTP client setup with automatic token injection
+- ✅ Complete AuthService implementation
+- ✅ User and AuthResponse models
+- ✅ Register page with form validation
+- ✅ Login page with form validation
+- ✅ Token storage using SharedPreferences
+- ✅ Error handling and user feedback
+- ✅ Loading states and UI indicators
+
+📖 See `flutter-integration/FLUTTER_INTEGRATION_GUIDE.md` for complete implementation.
 
 ## Development
 
