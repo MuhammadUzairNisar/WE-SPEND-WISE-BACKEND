@@ -1,0 +1,1136 @@
+{
+	"info": {
+		"_postman_id": "we-spend-wise-api",
+		"name": "We Spend Wise API",
+		"description": "Complete API collection for We Spend Wise Backend with Authentication, Authorization, Roles and Permissions",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "we-spend-wise"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    if (response.data && response.data.token) {",
+									"        pm.environment.set(\"authToken\", response.data.token);",
+									"        pm.environment.set(\"refreshToken\", response.data.refreshToken);",
+									"        pm.environment.set(\"userId\", response.data.user.id);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"password\": \"User@123456\",\n    \"phone\": \"+1234567890\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						},
+						"description": "Register a new user. User will be assigned 'user' role by default."
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    if (response.data && response.data.token) {",
+									"        pm.environment.set(\"authToken\", response.data.token);",
+									"        pm.environment.set(\"refreshToken\", response.data.refreshToken);",
+									"        pm.environment.set(\"userId\", response.data.user.id);",
+									"        pm.environment.set(\"userEmail\", response.data.user.email);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"User@123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login with email and password. Returns JWT token and refresh token."
+					},
+					"response": []
+				},
+				{
+					"name": "Login as Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    if (response.data && response.data.token) {",
+									"        pm.environment.set(\"authToken\", response.data.token);",
+									"        pm.environment.set(\"refreshToken\", response.data.refreshToken);",
+									"        pm.environment.set(\"userId\", response.data.user.id);",
+									"        pm.environment.set(\"userEmail\", response.data.user.email);",
+									"        pm.environment.set(\"isAdmin\", true);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"Admin@123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login as admin user."
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refreshToken\": \"{{refreshToken}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/refresh",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"refresh"
+							]
+						},
+						"description": "Refresh access token using refresh token."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Current User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/me",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"me"
+							]
+						},
+						"description": "Get current authenticated user's profile."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"John Updated\",\n    \"lastName\": \"Doe Updated\",\n    \"phone\": \"+9876543210\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"profile"
+							]
+						},
+						"description": "Update current user's profile."
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refreshToken\": \"{{refreshToken}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/logout",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"logout"
+							]
+						},
+						"description": "Logout user and invalidate refresh token. Omit refreshToken to logout from all devices."
+					},
+					"response": []
+				}
+			],
+			"description": "Authentication endpoints for user registration, login, logout, and profile management."
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/users?page=1&limit=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Page number"
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Items per page"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "Search by name or email",
+									"disabled": true
+								},
+								{
+									"key": "role",
+									"value": "",
+									"description": "Filter by role name",
+									"disabled": true
+								},
+								{
+									"key": "isActive",
+									"value": "",
+									"description": "Filter by active status",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Get all users with pagination. Requires admin role."
+					},
+					"response": []
+				},
+				{
+					"name": "Get User by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{userId}}"
+							]
+						},
+						"description": "Get user by ID. Users can view their own profile, admins can view any profile."
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Updated First Name\",\n    \"lastName\": \"Updated Last Name\",\n    \"phone\": \"+1234567890\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{userId}}"
+							]
+						},
+						"description": "Update user. Users can update their own profile, admins can update any user (including isActive)."
+					},
+					"response": []
+				},
+				{
+					"name": "Assign Roles to User",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"roles\": [\n        \"{{roleId}}\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/{{userId}}/roles",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{userId}}",
+								"roles"
+							]
+						},
+						"description": "Assign roles to a user. Requires admin role. Provide array of role ObjectIds."
+					},
+					"response": []
+				},
+				{
+					"name": "Change Password",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"currentPassword\": \"User@123456\",\n    \"newPassword\": \"NewPassword@123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/{{userId}}/password",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{userId}}",
+								"password"
+							]
+						},
+						"description": "Change user password. Users need to provide current password, admins don't."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{userId}}"
+							]
+						},
+						"description": "Delete a user. Requires admin role. Cannot delete super-admin users."
+					},
+					"response": []
+				}
+			],
+			"description": "User management endpoints. Most endpoints require admin role."
+		},
+		{
+			"name": "Roles",
+			"item": [
+				{
+					"name": "Get All Roles",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/roles?page=1&limit=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"roles"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "isActive",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Get all roles with pagination. Requires admin role."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Role by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    if (response.data && response.data.role) {",
+									"        pm.environment.set(\"roleId\", response.data.role._id);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/roles/{{roleId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"roles",
+								"{{roleId}}"
+							]
+						},
+						"description": "Get role by ID with permissions. Requires admin role."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Role",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"editor\",\n    \"displayName\": \"Editor\",\n    \"description\": \"Content editor role with create and update permissions\",\n    \"level\": 5,\n    \"permissions\": []\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/roles",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"roles"
+							]
+						},
+						"description": "Create a new role. Requires super-admin role."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Role",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"displayName\": \"Updated Editor Role\",\n    \"description\": \"Updated description\",\n    \"isActive\": true,\n    \"level\": 6\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/roles/{{roleId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"roles",
+								"{{roleId}}"
+							]
+						},
+						"description": "Update a role. Requires super-admin role. Cannot modify system roles."
+					},
+					"response": []
+				},
+				{
+					"name": "Add Permission to Role",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"permissionId\": \"{{permissionId}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/roles/{{roleId}}/permissions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"roles",
+								"{{roleId}}",
+								"permissions"
+							]
+						},
+						"description": "Add a permission to a role. Requires super-admin role."
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Permission from Role",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/roles/{{roleId}}/permissions/{{permissionId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"roles",
+								"{{roleId}}",
+								"permissions",
+								"{{permissionId}}"
+							]
+						},
+						"description": "Remove a permission from a role. Requires super-admin role."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Role",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/roles/{{roleId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"roles",
+								"{{roleId}}"
+							]
+						},
+						"description": "Delete a role. Requires super-admin role. Cannot delete system roles or roles assigned to users."
+					},
+					"response": []
+				}
+			],
+			"description": "Role management endpoints. Most endpoints require admin or super-admin role."
+		},
+		{
+			"name": "Permissions",
+			"item": [
+				{
+					"name": "Get All Permissions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/permissions?page=1&limit=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"permissions"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "resource",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "action",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "category",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "isActive",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Get all permissions with pagination. Requires admin role."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Permission by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    if (response.data && response.data.permission) {",
+									"        pm.environment.set(\"permissionId\", response.data.permission._id);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/permissions/{{permissionId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"permissions",
+								"{{permissionId}}"
+							]
+						},
+						"description": "Get permission by ID. Requires admin role."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Permission",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"displayName\": \"Export Reports\",\n    \"description\": \"Permission to export reports and data\",\n    \"resource\": \"reports\",\n    \"action\": \"export\",\n    \"category\": \"reports\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/permissions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"permissions"
+							]
+						},
+						"description": "Create a new permission. Requires super-admin role. Action must be one of: create, read, update, delete, manage, export, import."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Permission",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"displayName\": \"Updated Permission Name\",\n    \"description\": \"Updated description\",\n    \"category\": \"updated-category\",\n    \"isActive\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/permissions/{{permissionId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"permissions",
+								"{{permissionId}}"
+							]
+						},
+						"description": "Update a permission. Requires super-admin role. Cannot modify system permissions."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Permissions by Resource",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/permissions/resource/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"permissions",
+								"resource",
+								"users"
+							]
+						},
+						"description": "Get all permissions for a specific resource. Requires admin role."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Permissions by Category",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/permissions/category/user-management",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"permissions",
+								"category",
+								"user-management"
+							]
+						},
+						"description": "Get all permissions for a specific category. Requires admin role."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Permission",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/permissions/{{permissionId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"permissions",
+								"{{permissionId}}"
+							]
+						},
+						"description": "Delete a permission. Requires super-admin role. Cannot delete system permissions or permissions assigned to roles."
+					},
+					"response": []
+				}
+			],
+			"description": "Permission management endpoints. Most endpoints require admin or super-admin role."
+		},
+		{
+			"name": "Health Check",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"health"
+							]
+						},
+						"description": "Check if the server is running."
+					},
+					"response": []
+				},
+				{
+					"name": "API Documentation",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api"
+							]
+						},
+						"description": "Get API documentation and endpoint information."
+					},
+					"response": []
+				}
+			],
+			"description": "Health check and API documentation endpoints."
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5000",
+			"type": "string"
+		},
+		{
+			"key": "authToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refreshToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "userId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "roleId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "permissionId",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
