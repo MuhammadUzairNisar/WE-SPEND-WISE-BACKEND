@@ -71,6 +71,10 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Role'
   }],
+  wallets: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'UserWallet'
+  }],
   isActive: {
     type: Boolean,
     default: true

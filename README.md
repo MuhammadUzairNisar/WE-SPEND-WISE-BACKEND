@@ -37,12 +37,14 @@ A comprehensive Node.js backend API with authentication, authorization, roles, a
 ├── models/
 │   ├── User.js             # User model with authentication
 │   ├── Role.js             # Role model
-│   └── Permission.js       # Permission model
+│   ├── Permission.js       # Permission model
+│   └── UserWallet.js       # User wallet model
 ├── routes/
 │   ├── auth.js             # Authentication routes
 │   ├── users.js            # User management routes
 │   ├── roles.js            # Role management routes
-│   └── permissions.js      # Permission management routes
+│   ├── permissions.js      # Permission management routes
+│   └── wallets.js          # Wallet management routes
 ├── utils/
 │   └── seedData.js         # Database seeding utilities
 ├── server.js               # Main server file
@@ -166,6 +168,16 @@ A complete Postman collection is available for testing the API:
 | PUT | `/api/roles/:id/permissions` | Add permission to role | Super Admin |
 | DELETE | `/api/roles/:id/permissions/:permissionId` | Remove permission from role | Super Admin |
 
+### Wallet Management
+
+| Method | Endpoint | Description | Access |
+|--------|----------|-------------|---------||
+| POST | `/api/wallets` | Create multiple wallets | Private |
+| GET | `/api/wallets` | Get all user wallets | Private |
+| GET | `/api/wallets/:id` | Get wallet by ID | Private |
+| PUT | `/api/wallets/:id` | Update wallet | Private |
+| DELETE | `/api/wallets/:id` | Soft delete wallet | Private |
+
 ### Permission Management
 
 | Method | Endpoint | Description | Access |
@@ -269,6 +281,27 @@ Complete Flutter integration guide is available for registering and logging in u
 - ✅ Loading states and UI indicators
 
 📖 See `flutter-integration/FLUTTER_INTEGRATION_GUIDE.md` for complete implementation.
+
+## Wallet Management
+
+Complete wallet setup integration guide for Flutter is available.
+
+📁 **Location:** `flutter-integration/` folder
+
+### Files:
+- **`WALLET_SETUP_GUIDE.md`** - Complete wallet setup flow with modern UI/UX
+
+### Features:
+- ✅ Multi-wallet creation API
+- ✅ Default Cash wallet for physical money
+- ✅ Payment wallet setup (JazzCash, Easypaisa, etc.)
+- ✅ SMS and App notification configuration
+- ✅ Beautiful welcome screen with animations
+- ✅ Step-by-step wallet setup wizard
+- ✅ Soft delete functionality
+- ✅ Modern and appealing UI design
+
+📖 See `flutter-integration/WALLET_SETUP_GUIDE.md` for complete implementation.
 
 ## Development
 

@@ -8,13 +8,13 @@ const compression = require('compression');
 const connectDB = require('./config/database');
 
 // Import middleware
-const { 
-  generalLimiter, 
-  authLimiter, 
-  helmetConfig, 
-  corsConfig, 
-  sanitizeRequest, 
-  securityHeaders 
+const {
+  generalLimiter,
+  authLimiter,
+  helmetConfig,
+  corsConfig,
+  sanitizeRequest,
+  securityHeaders
 } = require('./middleware/security');
 const { errorHandler, notFound } = require('./middleware/errorHandler');
 
@@ -23,6 +23,7 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const roleRoutes = require('./routes/roles');
 const permissionRoutes = require('./routes/permissions');
+const walletRoutes = require('./routes/wallets');
 
 // Import utilities
 const { seedDatabase } = require('./utils/seedData');
@@ -43,6 +44,9 @@ app.use(securityHeaders);
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Serve static files from uploads directory
+app.use('/uploads', express.static('uploads'));
 
 // Request sanitization
 app.use(sanitizeRequest);
@@ -76,6 +80,7 @@ app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/roles', roleRoutes);
 app.use('/api/permissions', permissionRoutes);
+app.use('/api/wallets', walletRoutes);
 
 // API documentation endpoint
 app.get('/api', (req, res) => {
@@ -116,6 +121,13 @@ app.get('/api', (req, res) => {
         delete: 'DELETE /api/permissions/:id',
         byResource: 'GET /api/permissions/resource/:resource',
         byCategory: 'GET /api/permissions/category/:category'
+      },
+      wallets: {
+        list: 'GET /api/wallets',
+        get: 'GET /api/wallets/:id',
+        create: 'POST /api/wallets',
+        update: 'PUT /api/wallets/:id',
+        delete: 'DELETE /api/wallets/:id'
       }
     },
     authentication: {

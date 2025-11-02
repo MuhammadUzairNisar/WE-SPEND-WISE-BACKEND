@@ -1,0 +1,84 @@
+Create a Flutter wallet setup flow with image upload:
+
+1. WELCOME SCREEN:
+- Gradient background (purple to blue)
+- Large wallet icon (120px)
+- Fade-in animation (1.5s)
+- Text: "Welcome to We Spend Wise! 🎉"
+- Subtitle: "Let's set up your wallets to start managing your finances smartly"
+- "Get Started" button → navigate to wallet setup
+
+2. WALLET SETUP SCREEN (2-step Stepper):
+
+STEP 1 - Cash Wallet:
+- Image picker (optional): Tap to select icon from gallery
+- Show preview or placeholder with "Add Wallet Icon (Optional)"
+- Input: Cash amount (required, number validation)
+- Continue button
+
+STEP 2 - Payment Wallet:
+- Image picker (optional): Tap to select icon from gallery
+- Show preview or placeholder
+- Input: Wallet name (required, e.g., "JazzCash", "Easypaisa")
+- Input: Initial amount (required, number validation)
+- Switch: "Has App Notifications" → shows "Notification Name" input when ON
+- Switch: "Has SMS Code" → shows "SMS Code" input when ON
+- Finish button
+
+3. API INTEGRATION (multipart/form-data):
+
+POST /api/wallets
+Headers: Authorization: Bearer {token}
+Content-Type: multipart/form-data
+
+Body:
+  wallets: JSON string with hasImage flags
+  images: File array (only non-null images)
+
+Example:
+  wallets: '[{"name":"Cash","initialAmount":5000,"isDefault":true,"hasImage":false},{"name":"JazzCash","initialAmount":2000,"hasImage":true}]'
+  images: [jazzcash-icon.png]
+
+Key: Set hasImage: true for wallets that should receive images. Upload only non-null images in order.
+
+4. IMAGE HANDLING:
+- Use image_picker package
+- Gallery selection only
+- Max size: 512x512, quality: 85%
+- Show preview after selection
+- Optional for all wallets
+- Display placeholder if no image
+
+5. LOGIN FLOW:
+After login → GET /api/wallets
+- If empty: Show Welcome Screen
+- If has wallets: Go to Dashboard
+
+DEPENDENCIES:
+dio: ^5.3.3
+image_picker: ^1.0.4
+http_parser: ^4.0.2
+
+FILES TO CREATE:
+- lib/models/wallet.dart
+- lib/services/wallet_service.dart
+- lib/screens/welcome_screen.dart
+- lib/screens/wallet_setup_screen.dart
+
+KEY IMPLEMENTATION:
+- Add hasImage flag to wallet JSON before upload
+- Only upload non-null images
+- Images matched by hasImage flag, not index
+- FormData for multipart upload
+- Handle optional images properly
+
+DESIGN:
+- Material Design 3
+- Rounded corners (12px)
+- Dashed border for empty image picker
+- Add photo icon for placeholder
+- Smooth animations
+- Loading states during upload
+- Error handling with SnackBars
+
+Make it minimal, clean, and handle optional images correctly.
