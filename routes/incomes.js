@@ -4,6 +4,7 @@ const { body, param, validationResult } = require("express-validator");
 const { protect } = require("../middleware/auth");
 const Income = require("../models/Income");
 const UserWallet = require("../models/UserWallet");
+const Transaction = require("../models/Transaction");
 
 // Validation middleware
 const handleValidationErrors = (req, res, next) => {
@@ -31,18 +32,26 @@ router.post(
     body("amount")
       .isFloat({ min: 0 })
       .withMessage("Amount must be a positive number"),
+    body("isFixedIncome").optional().isBoolean().withMessage("isFixedIncome must be a boolean"),
     body("cycleDate")
+      .if((value, { req }) => req.body.isFixedIncome !== false)
       .isInt({ min: 1, max: 31 })
       .withMessage("Cycle date must be between 1 and 31"),
     body("cycleType")
+      .if((value, { req }) => req.body.isFixedIncome !== false)
       .isIn(["monthly", "quarterly", "yearly"])
-      .withMessage("Cycle type must be monthly, quarterly, or yearly")
+      .withMessage("Cycle type must be monthly, quarterly, or yearly"),
+    body("entryDate")
+      .if((value, { req }) => req.body.isFixedIncome === false)
+      .optional()
+      .isISO8601()
+      .withMessage("Entry date must be a valid date")
   ],
   handleValidationErrors,
   async (req, res) => {
     try {
       const userId = req.user._id;
-      const { walletId, name, description, amount, cycleDate, cycleType } =
+      const { walletId, name, description, amount, isFixedIncome, cycleDate, cycleType, entryDate } =
         req.body;
 
       // Verify wallet exists and belongs to user
@@ -60,15 +69,40 @@ router.post(
       }
 
       // Create income source
-      const income = await Income.create({
+      const incomeData = {
         userId,
         walletId,
         name,
         description,
         amount,
-        cycleDate,
-        cycleType
-      });
+        isFixedIncome: isFixedIncome !== undefined ? isFixedIncome : true
+      };
+
+      if (incomeData.isFixedIncome) {
+        incomeData.cycleDate = cycleDate;
+        incomeData.cycleType = cycleType;
+      } else {
+        incomeData.entryDate = entryDate || new Date();
+      }
+
+      const income = await Income.create(incomeData);
+
+      // If spontaneous income, create transaction immediately
+      if (!incomeData.isFixedIncome) {
+        const transaction = await Transaction.create({
+          userId,
+          walletId,
+          title: `Income: ${name}`,
+          description: description || `Spontaneous income from ${name}`,
+          amount,
+          transactionType: "income",
+          transactionDate: incomeData.entryDate
+        });
+
+        // Update wallet balance
+        wallet.balance += amount;
+        await wallet.save();
+      }
 
       res.status(201).json({
         success: true,
@@ -111,8 +145,36 @@ router.get("/", protect, async (req, res) => {
   }
 });
 
+// @route   GET /api/incomes/transactions
+// @desc    Get all income transactions for logged-in user
+// @access  Private
+router.get("/transactions", protect, async (req, res) => {
+  try {
+    const transactions = await Transaction.find({
+      userId: req.user._id,
+      transactionType: "income",
+      isDeleted: false
+    })
+      .populate("walletId", "name walletType")
+      .sort({ transactionDate: -1 });
+
+    res.json({
+      success: true,
+      count: transactions.length,
+      data: transactions
+    });
+  } catch (error) {
+    console.error("Get income transactions error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch income transactions",
+      error: error.message
+    });
+  }
+});
+
 // @route   GET /api/incomes/:id
-// @desc    Get single income source
+// @desc    Get single income source by ID
 // @access  Private
 router.get(
   "/:id",
@@ -167,6 +229,7 @@ router.put(
       .optional()
       .isFloat({ min: 0 })
       .withMessage("Amount must be a positive number"),
+    body("isFixedIncome").optional().isBoolean().withMessage("isFixedIncome must be a boolean"),
     body("cycleDate")
       .optional()
       .isInt({ min: 1, max: 31 })
@@ -174,7 +237,11 @@ router.put(
     body("cycleType")
       .optional()
       .isIn(["monthly", "quarterly", "yearly"])
-      .withMessage("Cycle type must be monthly, quarterly, or yearly")
+      .withMessage("Cycle type must be monthly, quarterly, or yearly"),
+    body("entryDate")
+      .optional()
+      .isISO8601()
+      .withMessage("Entry date must be a valid date")
   ],
   handleValidationErrors,
   async (req, res) => {
@@ -197,8 +264,10 @@ router.put(
         "name",
         "description",
         "amount",
+        "isFixedIncome",
         "cycleDate",
-        "cycleType"
+        "cycleType",
+        "entryDate"
       ];
       allowedUpdates.forEach((field) => {
         if (req.body[field] !== undefined) {

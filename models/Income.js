@@ -29,18 +29,35 @@ const incomeSchema = new mongoose.Schema(
       required: [true, "Amount is required"],
       min: [0, "Amount cannot be negative"]
     },
+    isFixedIncome: {
+      type: Boolean,
+      default: true
+    },
     cycleDate: {
       type: Number, // Day of month (1-31)
-      required: [true, "Cycle date is required"],
+      required: function() {
+        return this.isFixedIncome;
+      },
       min: [1, "Cycle date must be between 1 and 31"],
       max: [31, "Cycle date must be between 1 and 31"]
     },
     cycleType: {
       type: String,
-      required: [true, "Cycle type is required"],
+      required: function() {
+        return this.isFixedIncome;
+      },
       enum: {
         values: ["monthly", "quarterly", "yearly"],
         message: "Cycle type must be monthly, quarterly, or yearly"
+      }
+    },
+    entryDate: {
+      type: Date,
+      required: function() {
+        return !this.isFixedIncome;
+      },
+      default: function() {
+        return !this.isFixedIncome ? Date.now() : undefined;
       }
     },
     relaxationDate: {
@@ -65,6 +82,8 @@ const incomeSchema = new mongoose.Schema(
 incomeSchema.index({ userId: 1, isDeleted: 1 });
 incomeSchema.index({ walletId: 1 });
 incomeSchema.index({ cycleDate: 1, cycleType: 1 });
+incomeSchema.index({ isFixedIncome: 1 });
+incomeSchema.index({ entryDate: 1 });
 
 // Virtual to get formatted title
 incomeSchema.virtual("transactionTitle").get(function () {

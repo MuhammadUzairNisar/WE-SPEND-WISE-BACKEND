@@ -4,14 +4,18 @@ Complete API documentation for managing income sources in the We Spend Wise appl
 
 ## Overview
 
-Income sources represent recurring income streams that users receive on a regular basis (monthly, quarterly, or yearly). These sources are used to send notifications to users and automatically track their income transactions.
+Income sources represent both recurring and spontaneous income streams. Users can track:
+- **Fixed Income**: Recurring income (monthly, quarterly, yearly) like salary
+- **Spontaneous Income**: One-time income like freelance payments or gifts
 
 ## Features
 
 - Create, read, update, and delete income sources
+- Support for fixed (recurring) and spontaneous (one-time) income
 - Associate income sources with specific wallets
-- Set recurring cycles (monthly, quarterly, yearly)
-- Automatic relaxation date calculation
+- Set recurring cycles for fixed income (monthly, quarterly, yearly)
+- Track entry dates for spontaneous income
+- Automatic relaxation date calculation for fixed income
 - Soft delete functionality
 
 ## Base URL
@@ -36,7 +40,7 @@ Create a new income source for the authenticated user.
 
 **Endpoint:** `POST /api/incomes`
 
-**Request Body:**
+**Request Body (Fixed Income):**
 
 ```json
 {
@@ -44,8 +48,22 @@ Create a new income source for the authenticated user.
   "name": "Salary from Biafotech",
   "description": "Monthly salary payment",
   "amount": 30000,
+  "isFixedIncome": true,
   "cycleDate": 5,
   "cycleType": "monthly"
+}
+```
+
+**Request Body (Spontaneous Income):**
+
+```json
+{
+  "walletId": "64a1b2c3d4e5f6789012345",
+  "name": "Freelance Project Payment",
+  "description": "Website development project",
+  "amount": 15000,
+  "isFixedIncome": false,
+  "entryDate": "2024-01-15T10:30:00Z"
 }
 ```
 
@@ -55,10 +73,12 @@ Create a new income source for the authenticated user.
 - `name` (required): Name of the income source (max 100 characters)
 - `description` (optional): Description of the income source (max 500 characters)
 - `amount` (required): Amount of income (must be positive)
-- `cycleDate` (required): Day of the month (1-31)
-- `cycleType` (required): One of `monthly`, `quarterly`, or `yearly`
+- `isFixedIncome` (optional): Boolean, defaults to `true`. Set to `false` for spontaneous income
+- `cycleDate` (required if isFixedIncome=true): Day of the month (1-31)
+- `cycleType` (required if isFixedIncome=true): One of `monthly`, `quarterly`, or `yearly`
+- `entryDate` (required if isFixedIncome=false): Date when income was received (ISO 8601 format)
 
-**Success Response (201 Created):**
+**Success Response (201 Created) - Fixed Income:**
 
 ```json
 {
@@ -71,6 +91,7 @@ Create a new income source for the authenticated user.
     "name": "Salary from Biafotech",
     "description": "Monthly salary payment",
     "amount": 30000,
+    "isFixedIncome": true,
     "cycleDate": 5,
     "cycleType": "monthly",
     "relaxationDate": null,
@@ -81,6 +102,32 @@ Create a new income source for the authenticated user.
   }
 }
 ```
+
+**Success Response (201 Created) - Spontaneous Income:**
+
+```json
+{
+  "success": true,
+  "message": "Income source created successfully",
+  "data": {
+    "_id": "64a1b2c3d4e5f6789012347",
+    "userId": "64a1b2c3d4e5f6789012345",
+    "walletId": "64a1b2c3d4e5f6789012345",
+    "name": "Freelance Project Payment",
+    "description": "Website development project",
+    "amount": 15000,
+    "isFixedIncome": false,
+    "entryDate": "2024-01-15T10:30:00.000Z",
+    "relaxationDate": null,
+    "isDeleted": false,
+    "deletedAt": null,
+    "createdAt": "2024-01-15T10:00:00.000Z",
+    "updatedAt": "2024-01-15T10:00:00.000Z"
+  }
+}
+```
+
+**Note:** When creating spontaneous income (`isFixedIncome: false`), a transaction is automatically created and the wallet balance is updated immediately.
 
 **Error Responses:**
 
@@ -111,7 +158,62 @@ Create a new income source for the authenticated user.
 
 ---
 
-### 2. Get All Income Sources
+### 2. Get All Income Transactions
+
+Retrieve all income transactions for the authenticated user (sorted by transaction date, newest first).
+
+**Endpoint:** `GET /api/incomes/transactions`
+
+**Success Response (200 OK):**
+
+```json
+{
+  "success": true,
+  "count": 2,
+  "data": [
+    {
+      "_id": "64a1b2c3d4e5f6789012348",
+      "userId": "64a1b2c3d4e5f6789012345",
+      "walletId": {
+        "_id": "64a1b2c3d4e5f6789012345",
+        "name": "Cash Wallet",
+        "walletType": "cash"
+      },
+      "title": "Income: Freelance Project Payment",
+      "description": "Spontaneous income from Freelance Project Payment",
+      "amount": 15000,
+      "transactionType": "income",
+      "transactionDate": "2024-01-15T10:30:00.000Z",
+      "file": null,
+      "isDeleted": false,
+      "createdAt": "2024-01-15T10:30:00.000Z",
+      "updatedAt": "2024-01-15T10:30:00.000Z"
+    },
+    {
+      "_id": "64a1b2c3d4e5f6789012349",
+      "userId": "64a1b2c3d4e5f6789012345",
+      "walletId": {
+        "_id": "64a1b2c3d4e5f6789012345",
+        "name": "Cash Wallet",
+        "walletType": "cash"
+      },
+      "title": "Income: Monthly Salary",
+      "description": "Added Income for Monthly Salary on January 5, 2024",
+      "amount": 50000,
+      "transactionType": "income",
+      "transactionDate": "2024-01-05T09:00:00.000Z",
+      "file": null,
+      "isDeleted": false,
+      "createdAt": "2024-01-05T09:00:00.000Z",
+      "updatedAt": "2024-01-05T09:00:00.000Z"
+    }
+  ]
+}
+```
+
+---
+
+### 3. Get All Income Sources
 
 Retrieve all income sources for the authenticated user.
 
@@ -158,7 +260,7 @@ Retrieve all income sources for the authenticated user.
 
 ---
 
-### 3. Get Single Income Source
+### 4. Get Single Income Source
 
 Retrieve a specific income source by ID.
 
@@ -201,7 +303,7 @@ Retrieve a specific income source by ID.
 
 ---
 
-### 4. Update Income Source
+### 5. Update Income Source
 
 Update an existing income source.
 
@@ -247,7 +349,7 @@ All fields are optional. Only include the fields you want to update.
 
 ---
 
-### 5. Delete Income Source
+### 6. Delete Income Source
 
 Soft delete an income source (marks as deleted but doesn't remove from database).
 
@@ -289,9 +391,11 @@ Soft delete an income source (marks as deleted but doesn't remove from database)
   name: String,               // Income source name
   description: String,        // Optional description
   amount: Number,             // Income amount (≥ 0)
-  cycleDate: Number,          // Day of month (1-31)
-  cycleType: String,          // 'monthly' | 'quarterly' | 'yearly'
-  relaxationDate: Date,       // Next prompt date
+  isFixedIncome: Boolean,     // true = recurring, false = spontaneous (default: true)
+  cycleDate: Number,          // Day of month (1-31) - required if isFixedIncome=true
+  cycleType: String,          // 'monthly' | 'quarterly' | 'yearly' - required if isFixedIncome=true
+  entryDate: Date,            // Date received - required if isFixedIncome=false
+  relaxationDate: Date,       // Next prompt date (for fixed income only)
   isDeleted: Boolean,         // Soft delete flag
   deletedAt: Date,           // Deletion timestamp
   createdAt: Date,           // Auto-generated
@@ -309,7 +413,7 @@ Soft delete an income source (marks as deleted but doesn't remove from database)
 
 ## Usage Examples
 
-### Example 1: Creating Monthly Salary
+### Example 1: Creating Fixed Monthly Salary
 
 ```bash
 curl -X POST http://localhost:5000/api/incomes \
@@ -320,12 +424,28 @@ curl -X POST http://localhost:5000/api/incomes \
     "name": "Monthly Salary",
     "description": "Primary job salary",
     "amount": 50000,
+    "isFixedIncome": true,
     "cycleDate": 5,
     "cycleType": "monthly"
   }'
 ```
 
-### Example 2: Creating Yearly Bonus
+### Example 2: Creating Spontaneous Freelance Income
+
+```bash
+curl -X POST http://localhost:5000/api/incomes \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "walletId": "64a1b2c3d4e5f6789012345",
+    "name": "Freelance Project",
+    "description": "Website development",
+    "amount": 25000,
+    "isFixedIncome": false
+  }'
+```
+
+### Example 3: Creating Yearly Bonus
 
 ```bash
 curl -X POST http://localhost:5000/api/incomes \
@@ -336,12 +456,13 @@ curl -X POST http://localhost:5000/api/incomes \
     "name": "Yearly Bonus",
     "description": "Annual performance bonus",
     "amount": 100000,
+    "isFixedIncome": true,
     "cycleDate": 31,
     "cycleType": "yearly"
   }'
 ```
 
-### Example 3: Updating Income Amount
+### Example 4: Updating Income Amount
 
 ```bash
 curl -X PUT http://localhost:5000/api/incomes/64a1b2c3d4e5f6789012346 \
@@ -377,11 +498,13 @@ All endpoints follow consistent error response format:
 
 ## Best Practices
 
-1. **Wallet Verification**: Always ensure the wallet belongs to the user before creating an income source
-2. **Cycle Date**: Use valid day numbers (1-31) but consider month-end edge cases
-3. **Amount Validation**: Always use positive numbers for income amounts
-4. **Soft Delete**: Use soft delete to maintain data integrity and audit trails
-5. **Relaxation Date**: The system will automatically calculate the next relaxation date when processing cycles
+1. **Income Type Selection**: Use `isFixedIncome=true` for recurring income, `isFixedIncome=false` for one-time income
+2. **Wallet Verification**: Always ensure the wallet belongs to the user before creating an income source
+3. **Cycle Date**: Use valid day numbers (1-31) for fixed income but consider month-end edge cases
+4. **Entry Date**: For spontaneous income, entryDate defaults to current time if not provided
+5. **Amount Validation**: Always use positive numbers for income amounts
+6. **Soft Delete**: Use soft delete to maintain data integrity and audit trails
+7. **Relaxation Date**: The system will automatically calculate the next relaxation date when processing fixed income cycles
 
 ---
 
@@ -391,18 +514,26 @@ All endpoints follow consistent error response format:
 
 Income sources are designed to work with the transaction system:
 
-- When an income source is processed, it creates a transaction
+**Fixed Income:**
+- When processed by cron job, it creates a transaction
 - Transaction title format: `Added Income for {name} on {formatted_date}`
 - The wallet balance is automatically updated when transactions are created
 
+**Spontaneous Income:**
+- Transaction is created immediately upon income creation
+- Transaction title format: `Income: {name}`
+- Wallet balance is updated instantly
+- Can be retrieved via `/api/incomes/transactions` endpoint
+
 ### With Notification System
 
-Income sources work with cron jobs to send notifications:
+Fixed income sources work with cron jobs to send notifications:
 
-- Notifications are sent at 9 AM on the cycle date
+- Notifications are sent at 9 AM on the cycle date (fixed income only)
 - User is prompted to confirm if they received the income
 - Upon confirmation, a transaction is created
 - The relaxation date is updated for the next cycle
+- Spontaneous income does not trigger automated notifications
 
 ---
 
