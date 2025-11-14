@@ -4,6 +4,7 @@ const { body, param, validationResult } = require("express-validator");
 const { protect } = require("../middleware/auth");
 const Expense = require("../models/Expense");
 const UserWallet = require("../models/UserWallet");
+const Transaction = require("../models/Transaction");
 
 // Validation middleware
 const handleValidationErrors = (req, res, next) => {
@@ -31,18 +32,26 @@ router.post(
     body("amount")
       .isFloat({ min: 0 })
       .withMessage("Amount must be a positive number"),
+    body("isFixedExpense").optional().isBoolean().withMessage("isFixedExpense must be a boolean"),
     body("cycleDate")
+      .if((value, { req }) => req.body.isFixedExpense !== false)
       .isInt({ min: 1, max: 31 })
       .withMessage("Cycle date must be between 1 and 31"),
     body("cycleType")
+      .if((value, { req }) => req.body.isFixedExpense !== false)
       .isIn(["monthly", "quarterly", "yearly"])
-      .withMessage("Cycle type must be monthly, quarterly, or yearly")
+      .withMessage("Cycle type must be monthly, quarterly, or yearly"),
+    body("entryDate")
+      .if((value, { req }) => req.body.isFixedExpense === false)
+      .optional()
+      .isISO8601()
+      .withMessage("Entry date must be a valid date")
   ],
   handleValidationErrors,
   async (req, res) => {
     try {
       const userId = req.user._id;
-      const { walletId, name, description, amount, cycleDate, cycleType } =
+      const { walletId, name, description, amount, isFixedExpense, cycleDate, cycleType, entryDate } =
         req.body;
 
       // Verify wallet exists and belongs to user
@@ -60,15 +69,49 @@ router.post(
       }
 
       // Create expense source
-      const expense = await Expense.create({
+      const expenseData = {
         userId,
         walletId,
         name,
         description,
         amount,
-        cycleDate,
-        cycleType
-      });
+        isFixedExpense: isFixedExpense !== undefined ? isFixedExpense : true
+      };
+
+      if (expenseData.isFixedExpense) {
+        expenseData.cycleDate = cycleDate;
+        expenseData.cycleType = cycleType;
+      } else {
+        expenseData.entryDate = entryDate || new Date();
+      }
+
+      const expense = await Expense.create(expenseData);
+
+      // If spontaneous expense, create transaction immediately
+      if (!expenseData.isFixedExpense) {
+        // Check wallet balance
+        if (wallet.balance < amount) {
+          await Expense.findByIdAndDelete(expense._id);
+          return res.status(400).json({
+            success: false,
+            message: "Insufficient wallet balance"
+          });
+        }
+
+        const transaction = await Transaction.create({
+          userId,
+          walletId,
+          title: `Expense: ${name}`,
+          description: description || `Spontaneous expense for ${name}`,
+          amount,
+          transactionType: "expense",
+          transactionDate: expenseData.entryDate
+        });
+
+        // Update wallet balance
+        wallet.balance -= amount;
+        await wallet.save();
+      }
 
       res.status(201).json({
         success: true,
@@ -111,8 +154,36 @@ router.get("/", protect, async (req, res) => {
   }
 });
 
+// @route   GET /api/expenses/transactions
+// @desc    Get all expense transactions for logged-in user
+// @access  Private
+router.get("/transactions", protect, async (req, res) => {
+  try {
+    const transactions = await Transaction.find({
+      userId: req.user._id,
+      transactionType: "expense",
+      isDeleted: false
+    })
+      .populate("walletId", "name walletType")
+      .sort({ transactionDate: -1 });
+
+    res.json({
+      success: true,
+      count: transactions.length,
+      data: transactions
+    });
+  } catch (error) {
+    console.error("Get expense transactions error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch expense transactions",
+      error: error.message
+    });
+  }
+});
+
 // @route   GET /api/expenses/:id
-// @desc    Get single expense source
+// @desc    Get single expense source by ID
 // @access  Private
 router.get(
   "/:id",
@@ -167,6 +238,7 @@ router.put(
       .optional()
       .isFloat({ min: 0 })
       .withMessage("Amount must be a positive number"),
+    body("isFixedExpense").optional().isBoolean().withMessage("isFixedExpense must be a boolean"),
     body("cycleDate")
       .optional()
       .isInt({ min: 1, max: 31 })
@@ -174,7 +246,11 @@ router.put(
     body("cycleType")
       .optional()
       .isIn(["monthly", "quarterly", "yearly"])
-      .withMessage("Cycle type must be monthly, quarterly, or yearly")
+      .withMessage("Cycle type must be monthly, quarterly, or yearly"),
+    body("entryDate")
+      .optional()
+      .isISO8601()
+      .withMessage("Entry date must be a valid date")
   ],
   handleValidationErrors,
   async (req, res) => {
@@ -197,8 +273,10 @@ router.put(
         "name",
         "description",
         "amount",
+        "isFixedExpense",
         "cycleDate",
-        "cycleType"
+        "cycleType",
+        "entryDate"
       ];
       allowedUpdates.forEach((field) => {
         if (req.body[field] !== undefined) {

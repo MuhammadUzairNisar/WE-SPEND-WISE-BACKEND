@@ -4,14 +4,19 @@ Complete API documentation for managing expense sources in the We Spend Wise app
 
 ## Overview
 
-Expense sources represent recurring expenses that users have on a regular basis (monthly, quarterly, or yearly). These sources are used to send notifications to users and automatically track their expense transactions.
+Expense sources represent both recurring and spontaneous expenses. Users can track:
+- **Fixed Expense**: Recurring expenses (monthly, quarterly, yearly) like rent
+- **Spontaneous Expense**: One-time expenses like medical bills or repairs
 
 ## Features
 
 - Create, read, update, and delete expense sources
+- Support for fixed (recurring) and spontaneous (one-time) expenses
 - Associate expense sources with specific wallets
-- Set recurring cycles (monthly, quarterly, yearly)
-- Automatic relaxation date calculation
+- Set recurring cycles for fixed expenses (monthly, quarterly, yearly)
+- Track entry dates for spontaneous expenses
+- Automatic relaxation date calculation for fixed expenses
+- Balance verification for spontaneous expenses
 - Soft delete functionality
 
 ## Base URL
@@ -36,7 +41,7 @@ Create a new expense source for the authenticated user.
 
 **Endpoint:** `POST /api/expenses`
 
-**Request Body:**
+**Request Body (Fixed Expense):**
 
 ```json
 {
@@ -44,8 +49,22 @@ Create a new expense source for the authenticated user.
   "name": "Car EMI",
   "description": "Monthly car loan payment",
   "amount": 15000,
+  "isFixedExpense": true,
   "cycleDate": 15,
   "cycleType": "monthly"
+}
+```
+
+**Request Body (Spontaneous Expense):**
+
+```json
+{
+  "walletId": "64a1b2c3d4e5f6789012345",
+  "name": "Car Repair",
+  "description": "Emergency brake repair",
+  "amount": 5000,
+  "isFixedExpense": false,
+  "entryDate": "2024-01-15T10:30:00Z"
 }
 ```
 
@@ -55,8 +74,10 @@ Create a new expense source for the authenticated user.
 - `name` (required): Name of the expense source (max 100 characters)
 - `description` (optional): Description of the expense source (max 500 characters)
 - `amount` (required): Amount of expense (must be positive)
-- `cycleDate` (required): Day of the month (1-31)
-- `cycleType` (required): One of `monthly`, `quarterly`, or `yearly`
+- `isFixedExpense` (optional): Boolean, defaults to `true`. Set to `false` for spontaneous expense
+- `cycleDate` (required if isFixedExpense=true): Day of the month (1-31)
+- `cycleType` (required if isFixedExpense=true): One of `monthly`, `quarterly`, or `yearly`
+- `entryDate` (required if isFixedExpense=false): Date when expense was paid (ISO 8601 format)
 
 **Success Response (201 Created):**
 
@@ -111,7 +132,44 @@ Create a new expense source for the authenticated user.
 
 ---
 
-### 2. Get All Expense Sources
+### 2. Get All Expense Transactions
+
+Retrieve all expense transactions for the authenticated user (sorted by transaction date, newest first).
+
+**Endpoint:** `GET /api/expenses/transactions`
+
+**Success Response (200 OK):**
+
+```json
+{
+  "success": true,
+  "count": 2,
+  "data": [
+    {
+      "_id": "64a1b2c3d4e5f6789012348",
+      "userId": "64a1b2c3d4e5f6789012345",
+      "walletId": {
+        "_id": "64a1b2c3d4e5f6789012345",
+        "name": "Cash Wallet",
+        "walletType": "cash"
+      },
+      "title": "Expense: Car Repair",
+      "description": "Spontaneous expense for Car Repair",
+      "amount": 5000,
+      "transactionType": "expense",
+      "transactionDate": "2024-01-15T10:30:00.000Z",
+      "file": null,
+      "isDeleted": false,
+      "createdAt": "2024-01-15T10:30:00.000Z",
+      "updatedAt": "2024-01-15T10:30:00.000Z"
+    }
+  ]
+}
+```
+
+---
+
+### 3. Get All Expense Sources
 
 Retrieve all expense sources for the authenticated user.
 
@@ -158,7 +216,7 @@ Retrieve all expense sources for the authenticated user.
 
 ---
 
-### 3. Get Single Expense Source
+### 4. Get Single Expense Source
 
 Retrieve a specific expense source by ID.
 
@@ -201,7 +259,7 @@ Retrieve a specific expense source by ID.
 
 ---
 
-### 4. Update Expense Source
+### 5. Update Expense Source
 
 Update an existing expense source.
 
@@ -247,7 +305,7 @@ All fields are optional. Only include the fields you want to update.
 
 ---
 
-### 5. Delete Expense Source
+### 6. Delete Expense Source
 
 Soft delete an expense source (marks as deleted but doesn't remove from database).
 
@@ -289,9 +347,11 @@ Soft delete an expense source (marks as deleted but doesn't remove from database
   name: String,               // Expense source name
   description: String,        // Optional description
   amount: Number,             // Expense amount (≥ 0)
-  cycleDate: Number,          // Day of month (1-31)
-  cycleType: String,          // 'monthly' | 'quarterly' | 'yearly'
-  relaxationDate: Date,       // Next prompt date
+  isFixedExpense: Boolean,    // true = recurring, false = spontaneous (default: true)
+  cycleDate: Number,          // Day of month (1-31) - required if isFixedExpense=true
+  cycleType: String,          // 'monthly' | 'quarterly' | 'yearly' - required if isFixedExpense=true
+  entryDate: Date,            // Date paid - required if isFixedExpense=false
+  relaxationDate: Date,       // Next prompt date (for fixed expense only)
   isDeleted: Boolean,         // Soft delete flag
   deletedAt: Date,           // Deletion timestamp
   createdAt: Date,           // Auto-generated
@@ -391,18 +451,28 @@ All endpoints follow consistent error response format:
 
 Expense sources are designed to work with the transaction system:
 
-- When an expense source is processed, it creates a transaction
+**Fixed Expense:**
+- When processed by cron job, it creates a transaction
 - Transaction title format: `Added Expense for {name} on {formatted_date}`
 - The wallet balance is automatically deducted when transactions are created
+- Balance verification before processing
+
+**Spontaneous Expense:**
+- Transaction is created immediately upon expense creation
+- Transaction title format: `Expense: {name}`
+- Wallet balance is updated instantly
+- Balance checked before transaction (returns error if insufficient)
+- Can be retrieved via `/api/expenses/transactions` endpoint
 
 ### With Notification System
 
-Expense sources work with cron jobs to send notifications:
+Fixed expense sources work with cron jobs to send notifications:
 
-- Notifications are sent at 9 AM on the cycle date
+- Notifications are sent at 9 AM on the cycle date (fixed expense only)
 - User is prompted to confirm if they made the expense
 - Upon confirmation, a transaction is created and balance is deducted
 - The relaxation date is updated for the next cycle
+- Spontaneous expenses do not trigger automated notifications
 
 ---
 
