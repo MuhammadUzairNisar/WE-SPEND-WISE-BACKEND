@@ -90,7 +90,7 @@ router.post(
       // If spontaneous expense, create transaction immediately
       if (!expenseData.isFixedExpense) {
         // Check wallet balance
-        if (wallet.balance < amount) {
+        if (wallet.currentAmount < amount) {
           await Expense.findByIdAndDelete(expense._id);
           return res.status(400).json({
             success: false,
@@ -109,7 +109,7 @@ router.post(
         });
 
         // Update wallet balance
-        wallet.balance -= amount;
+        wallet.currentAmount -= amount;
         await wallet.save();
       }
 

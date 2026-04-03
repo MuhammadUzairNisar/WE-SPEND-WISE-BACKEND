@@ -100,7 +100,7 @@ router.post(
         });
 
         // Update wallet balance
-        wallet.balance += amount;
+        wallet.currentAmount += amount;
         await wallet.save();
       }
 

@@ -5,6 +5,7 @@ const { protect } = require('../middleware/auth');
 const upload = require('../middleware/upload');
 const UserWallet = require('../models/UserWallet');
 const User = require('../models/User');
+const Transaction = require('../models/Transaction');
 
 // Validation middleware
 const handleValidationErrors = (req, res, next) => {
@@ -148,6 +149,70 @@ router.get('/:id',
       res.status(500).json({
         success: false,
         message: 'Failed to fetch wallet',
+        error: error.message
+      });
+    }
+  }
+);
+
+// @route   GET /api/wallets/:id/transactions
+// @desc    Get transactions for a specific wallet with running balances
+// @access  Private
+router.get('/:id/transactions',
+  protect,
+  [param('id').isMongoId().withMessage('Invalid wallet ID')],
+  handleValidationErrors,
+  async (req, res) => {
+    try {
+      const wallet = await UserWallet.findOne({
+        _id: req.params.id,
+        userId: req.user._id,
+        isDeleted: false
+      });
+
+      if (!wallet) {
+        return res.status(404).json({
+          success: false,
+          message: 'Wallet not found'
+        });
+      }
+
+      const transactions = await Transaction.find({
+        userId: req.user._id,
+        walletId: wallet._id,
+        isDeleted: false
+      }).sort({ transactionDate: -1 });
+
+      let currentBalance = wallet.currentAmount;
+      
+      const transactionsWithBalance = transactions.map(t => {
+        const tObj = t.toObject();
+        tObj.runningBalance = currentBalance;
+
+        if (t.transactionType === 'income') {
+          currentBalance -= t.amount;
+        } else if (t.transactionType === 'expense') {
+          currentBalance += t.amount;
+        }
+        return tObj;
+      });
+
+      const { transactionType } = req.query;
+      let filteredTransactions = transactionsWithBalance;
+      if (transactionType && ['income', 'expense'].includes(transactionType)) {
+        filteredTransactions = transactionsWithBalance.filter(t => t.transactionType === transactionType);
+      }
+
+      res.json({
+        success: true,
+        count: filteredTransactions.length,
+        data: filteredTransactions
+      });
+    } catch (error) {
+      console.error('Get wallet transactions error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Failed to fetch wallet transactions',
         error: error.message
       });
     }
