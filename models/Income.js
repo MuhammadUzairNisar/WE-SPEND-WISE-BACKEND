@@ -13,6 +13,11 @@ const incomeSchema = new mongoose.Schema(
       ref: "UserWallet",
       required: [true, "Wallet ID is required"]
     },
+    categoryId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      default: null
+    },
     name: {
       type: String,
       required: [true, "Income name is required"],

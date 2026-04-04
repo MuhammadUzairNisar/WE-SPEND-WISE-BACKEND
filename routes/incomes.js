@@ -45,13 +45,14 @@ router.post(
       .if((value, { req }) => req.body.isFixedIncome === false)
       .optional()
       .isISO8601()
-      .withMessage("Entry date must be a valid date")
+      .withMessage("Entry date must be a valid date"),
+    body("categoryId").optional().isMongoId().withMessage("Invalid category ID")
   ],
   handleValidationErrors,
   async (req, res) => {
     try {
       const userId = req.user._id;
-      const { walletId, name, description, amount, isFixedIncome, cycleDate, cycleType, entryDate } =
+      const { walletId, name, description, amount, isFixedIncome, cycleDate, cycleType, entryDate, categoryId } =
         req.body;
 
       // Verify wallet exists and belongs to user
@@ -75,7 +76,8 @@ router.post(
         name,
         description,
         amount,
-        isFixedIncome: isFixedIncome !== undefined ? isFixedIncome : true
+        isFixedIncome: isFixedIncome !== undefined ? isFixedIncome : true,
+        categoryId: categoryId || null
       };
 
       if (incomeData.isFixedIncome) {
@@ -96,7 +98,8 @@ router.post(
           description: description || `Spontaneous income from ${name}`,
           amount,
           transactionType: "income",
-          transactionDate: incomeData.entryDate
+          transactionDate: incomeData.entryDate,
+          categoryId: categoryId || null
         });
 
         // Update wallet balance
@@ -128,7 +131,7 @@ router.get("/", protect, async (req, res) => {
     const incomes = await Income.find({
       userId: req.user._id,
       isDeleted: false
-    }).sort({ createdAt: -1 });
+    }).sort({ createdAt: -1 }).populate('categoryId', 'name icon color');
 
     res.json({
       success: true,
@@ -156,6 +159,7 @@ router.get("/transactions", protect, async (req, res) => {
       isDeleted: false
     })
       .populate("walletId", "name walletType")
+      .populate("categoryId", "name icon color")
       .sort({ transactionDate: -1 });
 
     res.json({
@@ -241,7 +245,8 @@ router.put(
     body("entryDate")
       .optional()
       .isISO8601()
-      .withMessage("Entry date must be a valid date")
+      .withMessage("Entry date must be a valid date"),
+    body("categoryId").optional().isMongoId().withMessage("Invalid category ID")
   ],
   handleValidationErrors,
   async (req, res) => {
@@ -267,7 +272,8 @@ router.put(
         "isFixedIncome",
         "cycleDate",
         "cycleType",
-        "entryDate"
+        "entryDate",
+        "categoryId"
       ];
       allowedUpdates.forEach((field) => {
         if (req.body[field] !== undefined) {

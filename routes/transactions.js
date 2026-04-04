@@ -42,7 +42,8 @@ router.post(
     body("transactionDate")
       .optional()
       .isISO8601()
-      .withMessage("Invalid transaction date")
+      .withMessage("Invalid transaction date"),
+    body("categoryId").optional().isMongoId().withMessage("Invalid category ID")
   ],
   handleValidationErrors,
   async (req, res) => {
@@ -54,7 +55,8 @@ router.post(
         description,
         amount,
         transactionType,
-        transactionDate
+        transactionDate,
+        categoryId
       } = req.body;
 
       // Verify wallet exists and belongs to user
@@ -81,7 +83,8 @@ router.post(
         transactionType,
         transactionDate: transactionDate
           ? new Date(transactionDate)
-          : new Date()
+          : new Date(),
+        categoryId: categoryId || null
       };
 
       // Add file path if uploaded
@@ -189,6 +192,7 @@ router.get(
       const totalDocs = await Transaction.countDocuments(query);
       const transactions = await Transaction.find(query)
         .populate("walletId", "name currentAmount")
+        .populate("categoryId", "name icon color")
         .sort({ transactionDate: -1 })
         .skip(skip)
         .limit(limit);
@@ -251,7 +255,9 @@ router.get(
         _id: req.params.id,
         userId: req.user._id,
         isDeleted: false
-      }).populate("walletId", "name currentAmount");
+      })
+        .populate("walletId", "name currentAmount")
+        .populate("categoryId", "name icon color");
 
       if (!transaction) {
         return res.status(404).json({

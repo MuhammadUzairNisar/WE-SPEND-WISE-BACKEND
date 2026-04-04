@@ -181,7 +181,7 @@ router.get('/:id/transactions',
         userId: req.user._id,
         walletId: wallet._id,
         isDeleted: false
-      }).sort({ transactionDate: -1 });
+      }).populate('categoryId', 'name icon color').sort({ transactionDate: -1 });
 
       let currentBalance = wallet.currentAmount;
       

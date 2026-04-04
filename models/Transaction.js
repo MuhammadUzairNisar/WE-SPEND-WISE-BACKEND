@@ -14,6 +14,12 @@ const transactionSchema = new mongoose.Schema(
       required: [true, "User ID is required"],
       index: true
     },
+    categoryId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      default: null,
+      index: true
+    },
     title: {
       type: String,
       required: [true, "Transaction title is required"],
