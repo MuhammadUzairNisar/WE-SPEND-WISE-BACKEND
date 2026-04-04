@@ -182,10 +182,16 @@ router.get(
         if (endDate) query.transactionDate.$lte = new Date(endDate);
       }
 
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 10;
+      const skip = (page - 1) * limit;
+
+      const totalDocs = await Transaction.countDocuments(query);
       const transactions = await Transaction.find(query)
         .populate("walletId", "name currentAmount")
         .sort({ transactionDate: -1 })
-        .limit(100); // Limit to prevent overwhelming responses
+        .skip(skip)
+        .limit(limit);
 
       // Calculate summary statistics
       const summary = {
@@ -204,9 +210,19 @@ router.get(
 
       summary.netAmount = summary.totalIncome - summary.totalExpense;
 
+      const totalPages = Math.ceil(totalDocs / limit);
+      const hasNextPage = page < totalPages;
+
       res.json({
         success: true,
         count: transactions.length,
+        pagination: {
+          totalDocs,
+          totalPages,
+          currentPage: page,
+          limit,
+          hasNextPage
+        },
         summary,
         data: transactions
       });

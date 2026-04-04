@@ -28,6 +28,7 @@ const incomeRoutes = require("./routes/incomes");
 const expenseRoutes = require("./routes/expenses");
 const transactionRoutes = require("./routes/transactions");
 const dashboardRoutes = require("./routes/dashboard");
+const savingsRoutes = require("./routes/savings");
 
 // Import utilities
 const { seedDatabase } = require("./utils/seedData");
@@ -92,6 +93,7 @@ app.use("/api/incomes", incomeRoutes);
 app.use("/api/expenses", expenseRoutes);
 app.use("/api/transactions", transactionRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/savings", savingsRoutes);
 
 // API documentation endpoint
 app.get("/api", (req, res) => {
@@ -162,6 +164,14 @@ app.get("/api", (req, res) => {
       },
       dashboard: {
         stats: "GET /api/dashboard/stats"
+      },
+      savings: {
+        list: "GET /api/savings",
+        get: "GET /api/savings/:id",
+        create: "POST /api/savings",
+        contribute: "PATCH /api/savings/:id/contribute",
+        postpone: "PATCH /api/savings/:id/postpone",
+        delete: "DELETE /api/savings/:id"
       }
     },
     authentication: {
