@@ -433,4 +433,59 @@ router.put('/profile', protect, [
   }
 });
 
+// @desc    Change password
+// @route   PUT /api/auth/change-password
+// @access  Private
+router.put('/change-password', protect, [
+  body('currentPassword')
+    .notEmpty()
+    .withMessage('Current password is required'),
+  body('newPassword')
+    .isLength({ min: 6 })
+    .withMessage('New password must be at least 6 characters long')
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
+    .withMessage('New password must contain at least one uppercase letter, one lowercase letter, and one number')
+], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Validation failed',
+        errors: errors.array()
+      });
+    }
+
+    const { currentPassword, newPassword } = req.body;
+
+    // Get user with password
+    const user = await User.findById(req.user._id).select('+password');
+    
+    // Check if current password is correct
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid current password'
+      });
+    }
+
+    // Update password
+    user.password = newPassword;
+    await user.save();
+
+    res.json({
+      success: true,
+      message: 'Password changed successfully'
+    });
+  } catch (error) {
+    console.error('Change password error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error changing password'
+    });
+  }
+});
+
 module.exports = router;
+
