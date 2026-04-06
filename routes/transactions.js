@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const mongoose = require("mongoose");
 const { body, param, query, validationResult } = require("express-validator");
 const { protect } = require("../middleware/auth");
 const Transaction = require("../models/Transaction");
@@ -144,13 +145,14 @@ router.get(
       .isIn(["income", "expense"])
       .withMessage("Transaction type must be income or expense"),
     query("startDate").optional().isISO8601().withMessage("Invalid start date"),
-    query("endDate").optional().isISO8601().withMessage("Invalid end date")
+    query("endDate").optional().isISO8601().withMessage("Invalid end date"),
+    query("categoryId").optional().isMongoId().withMessage("Invalid category ID")
   ],
   handleValidationErrors,
   async (req, res) => {
     try {
       const userId = req.user._id;
-      const { walletId, transactionType, startDate, endDate } = req.query;
+      const { walletId, transactionType, categoryId, startDate, endDate } = req.query;
 
       // Build query
       const query = {
@@ -177,6 +179,10 @@ router.get(
 
       if (transactionType) {
         query.transactionType = transactionType;
+      }
+
+      if (categoryId) {
+        query.categoryId = categoryId;
       }
 
       if (startDate || endDate) {
@@ -235,6 +241,216 @@ router.get(
       res.status(500).json({
         success: false,
         message: "Failed to fetch transactions",
+        error: error.message
+      });
+    }
+  }
+);
+
+// @route   GET /api/transactions/report
+// @desc    Get aggregated report data for income & expense
+// @access  Private
+router.get(
+  "/report",
+  protect,
+  [
+    query("startDate").optional().isISO8601().withMessage("Invalid start date"),
+    query("endDate").optional().isISO8601().withMessage("Invalid end date"),
+    query("categoryId").optional().isMongoId().withMessage("Invalid category ID")
+  ],
+  handleValidationErrors,
+  async (req, res) => {
+    try {
+      const userId = req.user._id;
+      const { startDate, endDate, categoryId } = req.query;
+
+      // Build match stage
+      const matchStage = {
+        userId: new mongoose.Types.ObjectId(userId),
+        isDeleted: false
+      };
+
+      if (startDate || endDate) {
+        matchStage.transactionDate = {};
+        if (startDate) matchStage.transactionDate.$gte = new Date(startDate);
+        if (endDate) matchStage.transactionDate.$lte = new Date(endDate);
+      }
+
+      if (categoryId) {
+        matchStage.categoryId = new mongoose.Types.ObjectId(categoryId);
+      }
+
+      // --- Summary aggregation ---
+      const summaryAgg = await Transaction.aggregate([
+        { $match: matchStage },
+        {
+          $group: {
+            _id: "$transactionType",
+            total: { $sum: "$amount" },
+            count: { $sum: 1 }
+          }
+        }
+      ]);
+
+      const summary = {
+        totalIncome: 0,
+        totalExpense: 0,
+        netAmount: 0,
+        incomeCount: 0,
+        expenseCount: 0,
+        transactionCount: 0
+      };
+
+      summaryAgg.forEach((item) => {
+        if (item._id === "income") {
+          summary.totalIncome = item.total;
+          summary.incomeCount = item.count;
+        } else if (item._id === "expense") {
+          summary.totalExpense = item.total;
+          summary.expenseCount = item.count;
+        }
+      });
+
+      summary.netAmount = summary.totalIncome - summary.totalExpense;
+      summary.transactionCount = summary.incomeCount + summary.expenseCount;
+
+      // --- Category breakdown aggregation ---
+      const categoryAgg = await Transaction.aggregate([
+        { $match: matchStage },
+        {
+          $lookup: {
+            from: "categories",
+            localField: "categoryId",
+            foreignField: "_id",
+            as: "category"
+          }
+        },
+        { $unwind: { path: "$category", preserveNullAndEmptyArrays: true } },
+        {
+          $group: {
+            _id: {
+              transactionType: "$transactionType",
+              categoryId: "$categoryId",
+              categoryName: { $ifNull: ["$category.name", "Other"] },
+              categoryColor: { $ifNull: ["$category.color", null] },
+              categoryIcon: { $ifNull: ["$category.icon", null] }
+            },
+            total: { $sum: "$amount" },
+            count: { $sum: 1 }
+          }
+        },
+        { $sort: { total: -1 } }
+      ]);
+
+      const categoryBreakdown = { income: [], expense: [] };
+      categoryAgg.forEach((item) => {
+        const entry = {
+          categoryId: item._id.categoryId,
+          categoryName: item._id.categoryName,
+          categoryColor: item._id.categoryColor,
+          categoryIcon: item._id.categoryIcon,
+          total: item.total,
+          count: item.count
+        };
+        if (item._id.transactionType === "income") {
+          categoryBreakdown.income.push(entry);
+        } else {
+          categoryBreakdown.expense.push(entry);
+        }
+      });
+
+      // --- Daily trend aggregation ---
+      const dailyAgg = await Transaction.aggregate([
+        { $match: matchStage },
+        {
+          $group: {
+            _id: {
+              date: {
+                $dateToString: { format: "%Y-%m-%d", date: "$transactionDate" }
+              },
+              transactionType: "$transactionType"
+            },
+            total: { $sum: "$amount" }
+          }
+        },
+        { $sort: { "_id.date": 1 } }
+      ]);
+
+      // Pivot daily data into { date, income, expense }
+      const dailyMap = {};
+      dailyAgg.forEach((item) => {
+        const dateStr = item._id.date;
+        if (!dailyMap[dateStr]) {
+          dailyMap[dateStr] = { date: dateStr, income: 0, expense: 0 };
+        }
+        dailyMap[dateStr][item._id.transactionType] = item.total;
+      });
+
+      const dailyTrend = Object.values(dailyMap).sort(
+        (a, b) => new Date(a.date) - new Date(b.date)
+      );
+
+      // --- Top transactions per category (highest single transaction) ---
+      const topTxAgg = await Transaction.aggregate([
+        { $match: matchStage },
+        {
+          $lookup: {
+            from: "categories",
+            localField: "categoryId",
+            foreignField: "_id",
+            as: "category"
+          }
+        },
+        { $unwind: { path: "$category", preserveNullAndEmptyArrays: true } },
+        { $sort: { amount: -1 } },
+        {
+          $group: {
+            _id: {
+              transactionType: "$transactionType",
+              categoryName: { $ifNull: ["$category.name", "Other"] }
+            },
+            topTransaction: { $first: "$$ROOT" }
+          }
+        }
+      ]);
+
+      const topTransactions = { income: [], expense: [] };
+      topTxAgg.forEach((item) => {
+        const tx = item.topTransaction;
+        const entry = {
+          id: tx._id,
+          title: tx.title,
+          amount: tx.amount,
+          transactionDate: tx.transactionDate,
+          categoryName: item._id.categoryName,
+          categoryColor: tx.category ? tx.category.color : null,
+          categoryIcon: tx.category ? tx.category.icon : null
+        };
+        if (item._id.transactionType === "income") {
+          topTransactions.income.push(entry);
+        } else {
+          topTransactions.expense.push(entry);
+        }
+      });
+
+      // Sort top transactions by amount descending
+      topTransactions.income.sort((a, b) => b.amount - a.amount);
+      topTransactions.expense.sort((a, b) => b.amount - a.amount);
+
+      res.json({
+        success: true,
+        data: {
+          summary,
+          categoryBreakdown,
+          dailyTrend,
+          topTransactions
+        }
+      });
+    } catch (error) {
+      console.error("Get report error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to generate report",
         error: error.message
       });
     }
