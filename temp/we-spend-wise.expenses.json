@@ -1,0 +1,82 @@
+[{
+  "_id": {
+    "$oid": "69ce3dcd73a7fb226b2353dc"
+  },
+  "userId": {
+    "$oid": "69ce3d3273a7fb226b2353a9"
+  },
+  "walletId": {
+    "$oid": "69ce3d6f73a7fb226b2353b6"
+  },
+  "name": "Rent",
+  "description": "Rent",
+  "amount": 50000,
+  "isFixedExpense": true,
+  "cycleDate": 10,
+  "cycleType": "monthly",
+  "relaxationDate": null,
+  "isDeleted": false,
+  "deletedAt": null,
+  "createdAt": {
+    "$date": "2026-04-02T09:58:37.098Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-02T09:58:37.098Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69cf46d9683114546b0a2db4"
+  },
+  "userId": {
+    "$oid": "69ce3d3273a7fb226b2353a9"
+  },
+  "walletId": {
+    "$oid": "69ce3d6f73a7fb226b2353b5"
+  },
+  "name": "Ride to Office",
+  "amount": 860,
+  "isFixedExpense": false,
+  "entryDate": {
+    "$date": "2026-04-03T04:48:57.515Z"
+  },
+  "relaxationDate": null,
+  "isDeleted": false,
+  "deletedAt": null,
+  "createdAt": {
+    "$date": "2026-04-03T04:49:29.434Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-03T04:49:29.434Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d13748f04eaad6f0128b4b"
+  },
+  "userId": {
+    "$oid": "69ce3d3273a7fb226b2353a9"
+  },
+  "walletId": {
+    "$oid": "69ce3d6f73a7fb226b2353b6"
+  },
+  "name": "Food",
+  "description": "ASD",
+  "amount": 2000,
+  "isFixedExpense": false,
+  "entryDate": {
+    "$date": "2026-04-03T19:00:00.000Z"
+  },
+  "relaxationDate": null,
+  "isDeleted": false,
+  "deletedAt": null,
+  "createdAt": {
+    "$date": "2026-04-04T16:07:36.510Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-04T16:07:36.510Z"
+  },
+  "__v": 0
+}]

@@ -1,0 +1,106 @@
+[{
+  "_id": {
+    "$oid": "69cd3dabd59b8490049672d0"
+  },
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "user@example.com",
+  "password": "$2a$12$oI6X3OaQlLq2lFMlTzxCMuMaQSq1/GMUQbCSqBpvnrXR4e2W.akea",
+  "avatar": null,
+  "isEmailVerified": true,
+  "roles": [
+    {
+      "$oid": "69cd3dabd59b8490049672cd"
+    }
+  ],
+  "wallets": [],
+  "isActive": true,
+  "lastLogin": {
+    "$date": "2026-04-02T09:46:33.910Z"
+  },
+  "loginAttempts": 0,
+  "refreshTokens": [],
+  "createdAt": {
+    "$date": "2026-04-01T15:45:47.506Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-02T09:53:08.671Z"
+  },
+  "__v": 7
+},
+{
+  "_id": {
+    "$oid": "69cd3dabd59b8490049672d4"
+  },
+  "firstName": "Admin",
+  "lastName": "User",
+  "email": "admin@example.com",
+  "password": "$2a$12$PPnvfeoHenkbZQ9EFyor1OXKaydzM28U5Pv8l5FUOpQP6/mpMO7e6",
+  "avatar": null,
+  "isEmailVerified": true,
+  "roles": [
+    {
+      "$oid": "69cd3dabd59b8490049672c7"
+    }
+  ],
+  "wallets": [],
+  "isActive": true,
+  "lastLogin": null,
+  "loginAttempts": 0,
+  "refreshTokens": [],
+  "createdAt": {
+    "$date": "2026-04-01T15:45:47.815Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-01T15:45:48.082Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "69ce3d3273a7fb226b2353a9"
+  },
+  "firstName": "Kashif",
+  "lastName": "Raza",
+  "email": "kashiraza102004@gmail.com",
+  "password": "$2a$12$VVtnBf3.DuzFlCJNrGEDLeQewU7tpgMr9YN1sTD9HFhtYL47AeQAy",
+  "phone": "923296444497",
+  "avatar": null,
+  "isEmailVerified": false,
+  "roles": [
+    {
+      "$oid": "69cd3dabd59b8490049672cd"
+    }
+  ],
+  "wallets": [
+    {
+      "$oid": "69ce3d6f73a7fb226b2353b5"
+    },
+    {
+      "$oid": "69ce3d6f73a7fb226b2353b6"
+    }
+  ],
+  "isActive": true,
+  "lastLogin": {
+    "$date": "2026-04-04T10:55:06.672Z"
+  },
+  "refreshTokens": [
+    {
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5Y2UzZDMyNzNhN2ZiMjI2YjIzNTNhOSIsImlhdCI6MTc3NTMwMDEwNiwiZXhwIjoxNzc1Mzg2NTA2fQ.ZUYBhYRSt3YZx4ZWXUhxQvGLoMF8kexTGINvfehkTJg",
+      "_id": {
+        "$oid": "69d0ee0a0e12b33671e060f2"
+      },
+      "createdAt": {
+        "$date": "2026-04-04T10:55:06.687Z"
+      }
+    }
+  ],
+  "createdAt": {
+    "$date": "2026-04-02T09:56:02.566Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-04T10:55:06.688Z"
+  },
+  "__v": 5,
+  "loginAttempts": 0
+}]

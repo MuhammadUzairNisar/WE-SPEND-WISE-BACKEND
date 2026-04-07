@@ -30,6 +30,7 @@ const transactionRoutes = require("./routes/transactions");
 const dashboardRoutes = require("./routes/dashboard");
 const savingsRoutes = require("./routes/savings");
 const categoryRoutes = require("./routes/categories");
+const syncRoutes = require("./routes/sync");
 
 // Import utilities
 const { seedDatabase } = require("./utils/seedData");
@@ -96,6 +97,7 @@ app.use("/api/transactions", transactionRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/savings", savingsRoutes);
 app.use("/api/categories", categoryRoutes);
+app.use("/api/sync", syncRoutes);
 
 // API documentation endpoint
 app.get("/api", (req, res) => {
@@ -214,9 +216,8 @@ const server = app.listen(PORT, () => {
 📡 Server listening on port ${PORT}
 🌐 API Documentation: http://localhost:${PORT}/api
 💚 Health Check: http://localhost:${PORT}/health
-📊 Database: ${
-    process.env.MONGODB_URI || "mongodb://localhost:27017/we-spend-wise"
-  }
+📊 Database: ${process.env.MONGODB_URI || "mongodb://localhost:27017/we-spend-wise"
+    }
   `);
 });
 

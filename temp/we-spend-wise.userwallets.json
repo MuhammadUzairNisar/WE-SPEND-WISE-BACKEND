@@ -1,0 +1,47 @@
+[{
+  "_id": {
+    "$oid": "69ce3d6f73a7fb226b2353b5"
+  },
+  "name": "Cash",
+  "hasAppNotification": false,
+  "hasSMSCode": false,
+  "isDefault": true,
+  "userId": {
+    "$oid": "69ce3d3273a7fb226b2353a9"
+  },
+  "initialAmount": 3000,
+  "currentAmount": 2640,
+  "image": null,
+  "isDeleted": false,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-04-02T09:57:03.441Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-03T04:49:29.459Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69ce3d6f73a7fb226b2353b6"
+  },
+  "name": "Easypaisa",
+  "hasAppNotification": true,
+  "notificationName": "Easypaisa",
+  "hasSMSCode": false,
+  "isDefault": false,
+  "userId": {
+    "$oid": "69ce3d3273a7fb226b2353a9"
+  },
+  "initialAmount": 600000,
+  "currentAmount": 566214.2799999998,
+  "image": "/uploads/wallets/wallet-1775123823435-925937091.png",
+  "isDeleted": false,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-04-02T09:57:03.441Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-04T19:34:33.227Z"
+  }
+}]

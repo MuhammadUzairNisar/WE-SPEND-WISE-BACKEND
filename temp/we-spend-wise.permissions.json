@@ -1,0 +1,323 @@
+[{
+  "_id": {
+    "$oid": "69cd3daad59b849004967270"
+  },
+  "name": "users:create",
+  "displayName": "Create Users",
+  "resource": "users",
+  "action": "create",
+  "isActive": true,
+  "isSystemPermission": true,
+  "category": "user-management",
+  "createdAt": {
+    "$date": "2026-04-01T15:45:46.769Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-01T15:45:46.769Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69cd3dabd59b849004967286"
+  },
+  "name": "users:read",
+  "displayName": "Read Users",
+  "resource": "users",
+  "action": "read",
+  "isActive": true,
+  "isSystemPermission": true,
+  "category": "user-management",
+  "createdAt": {
+    "$date": "2026-04-01T15:45:47.118Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-01T15:45:47.118Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69cd3dabd59b84900496728c"
+  },
+  "name": "users:update",
+  "displayName": "Update Users",
+  "resource": "users",
+  "action": "update",
+  "isActive": true,
+  "isSystemPermission": true,
+  "category": "user-management",
+  "createdAt": {
+    "$date": "2026-04-01T15:45:47.137Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-01T15:45:47.137Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69cd3dabd59b849004967293"
+  },
+  "name": "users:delete",
+  "displayName": "Delete Users",
+  "resource": "users",
+  "action": "delete",
+  "isActive": true,
+  "isSystemPermission": true,
+  "category": "user-management",
+  "createdAt": {
+    "$date": "2026-04-01T15:45:47.239Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-01T15:45:47.239Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69cd3dabd59b849004967297"
+  },
+  "name": "roles:create",
+  "displayName": "Create Roles",
+  "resource": "roles",
+  "action": "create",
+  "isActive": true,
+  "isSystemPermission": true,
+  "category": "role-management",
+  "createdAt": {
+    "$date": "2026-04-01T15:45:47.252Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-01T15:45:47.252Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69cd3dabd59b84900496729d"
+  },
+  "name": "roles:read",
+  "displayName": "Read Roles",
+  "resource": "roles",
+  "action": "read",
+  "isActive": true,
+  "isSystemPermission": true,
+  "category": "role-management",
+  "createdAt": {
+    "$date": "2026-04-01T15:45:47.289Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-01T15:45:47.289Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69cd3dabd59b8490049672a0"
+  },
+  "name": "roles:update",
+  "displayName": "Update Roles",
+  "resource": "roles",
+  "action": "update",
+  "isActive": true,
+  "isSystemPermission": true,
+  "category": "role-management",
+  "createdAt": {
+    "$date": "2026-04-01T15:45:47.303Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-01T15:45:47.303Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69cd3dabd59b8490049672a4"
+  },
+  "name": "roles:delete",
+  "displayName": "Delete Roles",
+  "resource": "roles",
+  "action": "delete",
+  "isActive": true,
+  "isSystemPermission": true,
+  "category": "role-management",
+  "createdAt": {
+    "$date": "2026-04-01T15:45:47.322Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-01T15:45:47.322Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69cd3dabd59b8490049672a8"
+  },
+  "name": "permissions:create",
+  "displayName": "Create Permissions",
+  "resource": "permissions",
+  "action": "create",
+  "isActive": true,
+  "isSystemPermission": true,
+  "category": "permission-management",
+  "createdAt": {
+    "$date": "2026-04-01T15:45:47.341Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-01T15:45:47.341Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69cd3dabd59b8490049672ab"
+  },
+  "name": "permissions:read",
+  "displayName": "Read Permissions",
+  "resource": "permissions",
+  "action": "read",
+  "isActive": true,
+  "isSystemPermission": true,
+  "category": "permission-management",
+  "createdAt": {
+    "$date": "2026-04-01T15:45:47.364Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-01T15:45:47.364Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69cd3dabd59b8490049672ae"
+  },
+  "name": "permissions:update",
+  "displayName": "Update Permissions",
+  "resource": "permissions",
+  "action": "update",
+  "isActive": true,
+  "isSystemPermission": true,
+  "category": "permission-management",
+  "createdAt": {
+    "$date": "2026-04-01T15:45:47.373Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-01T15:45:47.373Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69cd3dabd59b8490049672b1"
+  },
+  "name": "permissions:delete",
+  "displayName": "Delete Permissions",
+  "resource": "permissions",
+  "action": "delete",
+  "isActive": true,
+  "isSystemPermission": true,
+  "category": "permission-management",
+  "createdAt": {
+    "$date": "2026-04-01T15:45:47.381Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-01T15:45:47.381Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69cd3dabd59b8490049672b5"
+  },
+  "name": "profile:read",
+  "displayName": "Read Profile",
+  "resource": "profile",
+  "action": "read",
+  "isActive": true,
+  "isSystemPermission": true,
+  "category": "profile",
+  "createdAt": {
+    "$date": "2026-04-01T15:45:47.390Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-01T15:45:47.390Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69cd3dabd59b8490049672b8"
+  },
+  "name": "profile:update",
+  "displayName": "Update Profile",
+  "resource": "profile",
+  "action": "update",
+  "isActive": true,
+  "isSystemPermission": true,
+  "category": "profile",
+  "createdAt": {
+    "$date": "2026-04-01T15:45:47.422Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-01T15:45:47.422Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69cd3dabd59b8490049672bb"
+  },
+  "name": "dashboard:read",
+  "displayName": "Read Dashboard",
+  "resource": "dashboard",
+  "action": "read",
+  "isActive": true,
+  "isSystemPermission": true,
+  "category": "dashboard",
+  "createdAt": {
+    "$date": "2026-04-01T15:45:47.434Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-01T15:45:47.434Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69cd3dabd59b8490049672be"
+  },
+  "name": "settings:read",
+  "displayName": "Read Settings",
+  "resource": "settings",
+  "action": "read",
+  "isActive": true,
+  "isSystemPermission": true,
+  "category": "settings",
+  "createdAt": {
+    "$date": "2026-04-01T15:45:47.440Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-01T15:45:47.440Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69cd3dabd59b8490049672c1"
+  },
+  "name": "settings:update",
+  "displayName": "Update Settings",
+  "resource": "settings",
+  "action": "update",
+  "isActive": true,
+  "isSystemPermission": true,
+  "category": "settings",
+  "createdAt": {
+    "$date": "2026-04-01T15:45:47.448Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-01T15:45:47.448Z"
+  },
+  "__v": 0
+}]
