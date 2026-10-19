@@ -8,6 +8,11 @@ const expenseSchema = new mongoose.Schema(
       required: [true, "User ID is required"],
       index: true
     },
+    local_id: {
+      type: String,
+      default: null,
+      index: true
+    },
     walletId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "UserWallet",

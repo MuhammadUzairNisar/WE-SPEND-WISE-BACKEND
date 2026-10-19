@@ -1,0 +1,141 @@
+[{
+  "_id": {
+    "$oid": "69ce3da273a7fb226b2353ca"
+  },
+  "userId": {
+    "$oid": "69ce3d3273a7fb226b2353a9"
+  },
+  "walletId": {
+    "$oid": "69ce3d6f73a7fb226b2353b6"
+  },
+  "name": "Salary",
+  "description": "Salary",
+  "amount": 120000,
+  "isFixedIncome": true,
+  "cycleDate": 5,
+  "cycleType": "monthly",
+  "relaxationDate": null,
+  "isDeleted": false,
+  "deletedAt": null,
+  "createdAt": {
+    "$date": "2026-04-02T09:57:54.916Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-02T09:57:54.916Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69ce409e216acd7c68695198"
+  },
+  "userId": {
+    "$oid": "69ce3d3273a7fb226b2353a9"
+  },
+  "walletId": {
+    "$oid": "69ce3d6f73a7fb226b2353b5"
+  },
+  "name": "Pocket Money",
+  "description": "Pocket Money",
+  "amount": 1000,
+  "isFixedIncome": false,
+  "entryDate": {
+    "$date": "2026-04-01T19:00:00.000Z"
+  },
+  "relaxationDate": null,
+  "isDeleted": false,
+  "deletedAt": null,
+  "createdAt": {
+    "$date": "2026-04-02T10:10:38.409Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-02T10:10:38.409Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69cf43ab55637062a82805c1"
+  },
+  "userId": {
+    "$oid": "69ce3d3273a7fb226b2353a9"
+  },
+  "walletId": {
+    "$oid": "69ce3d6f73a7fb226b2353b5"
+  },
+  "name": "Pocket Money",
+  "description": "Pocket Money",
+  "amount": 500,
+  "isFixedIncome": false,
+  "entryDate": {
+    "$date": "2026-04-03T04:35:17.248Z"
+  },
+  "relaxationDate": null,
+  "isDeleted": false,
+  "deletedAt": null,
+  "createdAt": {
+    "$date": "2026-04-03T04:35:55.256Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-03T04:35:55.256Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69cf46b2683114546b0a2d85"
+  },
+  "userId": {
+    "$oid": "69ce3d3273a7fb226b2353a9"
+  },
+  "walletId": {
+    "$oid": "69ce3d6f73a7fb226b2353b5"
+  },
+  "name": "Found Some",
+  "amount": 500,
+  "isFixedIncome": false,
+  "entryDate": {
+    "$date": "2026-04-03T04:48:27.762Z"
+  },
+  "relaxationDate": null,
+  "isDeleted": false,
+  "deletedAt": null,
+  "createdAt": {
+    "$date": "2026-04-03T04:48:50.702Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-03T04:48:50.702Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d167c9aea000904bf2e869"
+  },
+  "userId": {
+    "$oid": "69ce3d3273a7fb226b2353a9"
+  },
+  "walletId": {
+    "$oid": "69ce3d6f73a7fb226b2353b6"
+  },
+  "categoryId": {
+    "$oid": "69d1679eaea000904bf2e841"
+  },
+  "name": "App Payment Milestone 1",
+  "description": "Initial UI",
+  "amount": 2500,
+  "isFixedIncome": false,
+  "entryDate": {
+    "$date": "2026-04-04T19:33:54.306Z"
+  },
+  "relaxationDate": null,
+  "isDeleted": false,
+  "deletedAt": null,
+  "createdAt": {
+    "$date": "2026-04-04T19:34:33.202Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-04T19:34:33.202Z"
+  },
+  "__v": 0
+}]

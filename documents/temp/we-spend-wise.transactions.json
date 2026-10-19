@@ -1,0 +1,283 @@
+[{
+  "_id": {
+    "$oid": "69ce409e216acd7c6869519a"
+  },
+  "walletId": {
+    "$oid": "69ce3d6f73a7fb226b2353b5"
+  },
+  "userId": {
+    "$oid": "69ce3d3273a7fb226b2353a9"
+  },
+  "title": "Income: Pocket Money",
+  "description": "Pocket Money",
+  "file": null,
+  "transactionDate": {
+    "$date": "2026-04-01T19:00:00.000Z"
+  },
+  "amount": 1000,
+  "transactionType": "income",
+  "isDeleted": false,
+  "deletedAt": null,
+  "createdAt": {
+    "$date": "2026-04-02T10:10:38.435Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-02T10:10:38.435Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69cf43ab55637062a82805c3"
+  },
+  "walletId": {
+    "$oid": "69ce3d6f73a7fb226b2353b5"
+  },
+  "userId": {
+    "$oid": "69ce3d3273a7fb226b2353a9"
+  },
+  "title": "Income: Pocket Money",
+  "description": "Pocket Money",
+  "file": null,
+  "transactionDate": {
+    "$date": "2026-04-03T04:35:17.248Z"
+  },
+  "amount": 500,
+  "transactionType": "income",
+  "isDeleted": false,
+  "deletedAt": null,
+  "createdAt": {
+    "$date": "2026-04-03T04:35:55.287Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-03T04:35:55.287Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69cf46b2683114546b0a2d87"
+  },
+  "walletId": {
+    "$oid": "69ce3d6f73a7fb226b2353b5"
+  },
+  "userId": {
+    "$oid": "69ce3d3273a7fb226b2353a9"
+  },
+  "title": "Income: Found Some",
+  "description": "Spontaneous income from Found Some",
+  "file": null,
+  "transactionDate": {
+    "$date": "2026-04-03T04:48:27.762Z"
+  },
+  "amount": 500,
+  "transactionType": "income",
+  "isDeleted": false,
+  "deletedAt": null,
+  "createdAt": {
+    "$date": "2026-04-03T04:48:50.722Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-03T04:48:50.722Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69cf46d9683114546b0a2db6"
+  },
+  "walletId": {
+    "$oid": "69ce3d6f73a7fb226b2353b5"
+  },
+  "userId": {
+    "$oid": "69ce3d3273a7fb226b2353a9"
+  },
+  "title": "Expense: Ride to Office",
+  "description": "Spontaneous expense for Ride to Office",
+  "file": null,
+  "transactionDate": {
+    "$date": "2026-04-03T04:48:57.515Z"
+  },
+  "amount": 860,
+  "transactionType": "expense",
+  "isDeleted": false,
+  "deletedAt": null,
+  "createdAt": {
+    "$date": "2026-04-03T04:49:29.448Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-03T04:49:29.448Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d1329890eef1f4c5004dee"
+  },
+  "walletId": {
+    "$oid": "69ce3d6f73a7fb226b2353b6"
+  },
+  "userId": {
+    "$oid": "69ce3d3273a7fb226b2353a9"
+  },
+  "title": "Savings: Mackbook",
+  "description": "Contribution to saving goal \"Mackbook\"",
+  "file": null,
+  "transactionDate": {
+    "$date": "2026-04-04T15:47:36.460Z"
+  },
+  "amount": 8571.43,
+  "transactionType": "expense",
+  "isDeleted": false,
+  "deletedAt": null,
+  "createdAt": {
+    "$date": "2026-04-04T15:47:36.461Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-04T15:47:36.461Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d132ac90eef1f4c5004df7"
+  },
+  "walletId": {
+    "$oid": "69ce3d6f73a7fb226b2353b6"
+  },
+  "userId": {
+    "$oid": "69ce3d3273a7fb226b2353a9"
+  },
+  "title": "Savings: Mackbook",
+  "description": "Contribution to saving goal \"Mackbook\"",
+  "file": null,
+  "transactionDate": {
+    "$date": "2026-04-04T15:47:56.013Z"
+  },
+  "amount": 8571.43,
+  "transactionType": "expense",
+  "isDeleted": false,
+  "deletedAt": null,
+  "createdAt": {
+    "$date": "2026-04-04T15:47:56.013Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-04T15:47:56.013Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d135b660222b6ca5ee5a28"
+  },
+  "walletId": {
+    "$oid": "69ce3d6f73a7fb226b2353b6"
+  },
+  "userId": {
+    "$oid": "69ce3d3273a7fb226b2353a9"
+  },
+  "title": "Savings: Mackbook",
+  "description": "Contribution to saving goal \"Mackbook\"",
+  "file": null,
+  "transactionDate": {
+    "$date": "2026-04-04T16:00:54.977Z"
+  },
+  "amount": 8571.43,
+  "transactionType": "expense",
+  "isDeleted": false,
+  "deletedAt": null,
+  "createdAt": {
+    "$date": "2026-04-04T16:00:54.985Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-04T16:00:54.985Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d136c4f04eaad6f0128af3"
+  },
+  "walletId": {
+    "$oid": "69ce3d6f73a7fb226b2353b6"
+  },
+  "userId": {
+    "$oid": "69ce3d3273a7fb226b2353a9"
+  },
+  "title": "Savings: Mackbook",
+  "description": "Contribution to saving goal \"Mackbook\"",
+  "file": null,
+  "transactionDate": {
+    "$date": "2026-04-04T16:05:24.374Z"
+  },
+  "amount": 8571.43,
+  "transactionType": "expense",
+  "isDeleted": false,
+  "deletedAt": null,
+  "createdAt": {
+    "$date": "2026-04-04T16:05:24.377Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-04T16:05:24.377Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d13748f04eaad6f0128b4d"
+  },
+  "walletId": {
+    "$oid": "69ce3d6f73a7fb226b2353b6"
+  },
+  "userId": {
+    "$oid": "69ce3d3273a7fb226b2353a9"
+  },
+  "title": "Expense: Food",
+  "description": "ASD",
+  "file": null,
+  "transactionDate": {
+    "$date": "2026-04-03T19:00:00.000Z"
+  },
+  "amount": 2000,
+  "transactionType": "expense",
+  "isDeleted": false,
+  "deletedAt": null,
+  "createdAt": {
+    "$date": "2026-04-04T16:07:36.522Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-04T16:07:36.522Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d167c9aea000904bf2e86b"
+  },
+  "walletId": {
+    "$oid": "69ce3d6f73a7fb226b2353b6"
+  },
+  "userId": {
+    "$oid": "69ce3d3273a7fb226b2353a9"
+  },
+  "categoryId": {
+    "$oid": "69d1679eaea000904bf2e841"
+  },
+  "title": "Income: App Payment Milestone 1",
+  "description": "Initial UI",
+  "file": null,
+  "transactionDate": {
+    "$date": "2026-04-04T19:33:54.306Z"
+  },
+  "amount": 2500,
+  "transactionType": "income",
+  "isDeleted": false,
+  "deletedAt": null,
+  "createdAt": {
+    "$date": "2026-04-04T19:34:33.213Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-04T19:34:33.213Z"
+  },
+  "__v": 0
+}]

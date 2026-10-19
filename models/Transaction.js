@@ -8,6 +8,11 @@ const transactionSchema = new mongoose.Schema(
       required: [true, "Wallet ID is required"],
       index: true
     },
+    local_id: {
+      type: String,
+      default: null,
+      index: true
+    },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

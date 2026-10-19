@@ -30,6 +30,7 @@ const transactionRoutes = require("./routes/transactions");
 const dashboardRoutes = require("./routes/dashboard");
 const savingsRoutes = require("./routes/savings");
 const categoryRoutes = require("./routes/categories");
+const syncRoutes = require("./routes/sync");
 
 // Import utilities
 const { seedDatabase } = require("./utils/seedData");
@@ -96,6 +97,7 @@ app.use("/api/transactions", transactionRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/savings", savingsRoutes);
 app.use("/api/categories", categoryRoutes);
+app.use("/api/sync", authLimiter, syncRoutes);
 
 // API documentation endpoint
 app.get("/api", (req, res) => {

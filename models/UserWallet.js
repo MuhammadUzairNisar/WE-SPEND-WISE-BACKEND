@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const userWalletSchema = new mongoose.Schema({
+  local_id: {
+    type: String,
+    default: null,
+    index: true
+  },
   name: {
     type: String,
     required: [true, 'Wallet name is required'],

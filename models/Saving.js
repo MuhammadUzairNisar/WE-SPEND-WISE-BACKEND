@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const savingSchema = new mongoose.Schema({
+  local_id: {
+    type: String,
+    default: null,
+    index: true
+  },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

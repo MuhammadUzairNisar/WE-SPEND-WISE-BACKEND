@@ -8,6 +8,11 @@ const categorySchema = new mongoose.Schema(
       required: [true, "User ID is required"],
       index: true
     },
+    local_id: {
+      type: String,
+      default: null,
+      index: true
+    },
     name: {
       type: String,
       required: [true, "Category name is required"],

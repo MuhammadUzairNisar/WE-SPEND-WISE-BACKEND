@@ -1,0 +1,194 @@
+[{
+  "_id": {
+    "$oid": "69cd3dabd59b8490049672c4"
+  },
+  "name": "super-admin",
+  "displayName": "Super Administrator",
+  "description": "Full system access with all permissions",
+  "permissions": [
+    {
+      "$oid": "69cd3daad59b849004967270"
+    },
+    {
+      "$oid": "69cd3dabd59b849004967286"
+    },
+    {
+      "$oid": "69cd3dabd59b84900496728c"
+    },
+    {
+      "$oid": "69cd3dabd59b849004967293"
+    },
+    {
+      "$oid": "69cd3dabd59b849004967297"
+    },
+    {
+      "$oid": "69cd3dabd59b84900496729d"
+    },
+    {
+      "$oid": "69cd3dabd59b8490049672a0"
+    },
+    {
+      "$oid": "69cd3dabd59b8490049672a4"
+    },
+    {
+      "$oid": "69cd3dabd59b8490049672a8"
+    },
+    {
+      "$oid": "69cd3dabd59b8490049672ab"
+    },
+    {
+      "$oid": "69cd3dabd59b8490049672ae"
+    },
+    {
+      "$oid": "69cd3dabd59b8490049672b1"
+    },
+    {
+      "$oid": "69cd3dabd59b8490049672b5"
+    },
+    {
+      "$oid": "69cd3dabd59b8490049672b8"
+    },
+    {
+      "$oid": "69cd3dabd59b8490049672bb"
+    },
+    {
+      "$oid": "69cd3dabd59b8490049672be"
+    },
+    {
+      "$oid": "69cd3dabd59b8490049672c1"
+    }
+  ],
+  "isActive": true,
+  "isSystemRole": true,
+  "level": 10,
+  "createdAt": {
+    "$date": "2026-04-01T15:45:47.458Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-01T15:45:47.458Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69cd3dabd59b8490049672c7"
+  },
+  "name": "admin",
+  "displayName": "Administrator",
+  "description": "Administrative access with most permissions",
+  "permissions": [
+    {
+      "$oid": "69cd3daad59b849004967270"
+    },
+    {
+      "$oid": "69cd3dabd59b849004967286"
+    },
+    {
+      "$oid": "69cd3dabd59b84900496728c"
+    },
+    {
+      "$oid": "69cd3dabd59b849004967293"
+    },
+    {
+      "$oid": "69cd3dabd59b849004967297"
+    },
+    {
+      "$oid": "69cd3dabd59b84900496729d"
+    },
+    {
+      "$oid": "69cd3dabd59b8490049672a0"
+    },
+    {
+      "$oid": "69cd3dabd59b8490049672a4"
+    },
+    {
+      "$oid": "69cd3dabd59b8490049672ab"
+    },
+    {
+      "$oid": "69cd3dabd59b8490049672b5"
+    },
+    {
+      "$oid": "69cd3dabd59b8490049672b8"
+    },
+    {
+      "$oid": "69cd3dabd59b8490049672bb"
+    },
+    {
+      "$oid": "69cd3dabd59b8490049672be"
+    },
+    {
+      "$oid": "69cd3dabd59b8490049672c1"
+    }
+  ],
+  "isActive": true,
+  "isSystemRole": true,
+  "level": 8,
+  "createdAt": {
+    "$date": "2026-04-01T15:45:47.467Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-01T15:45:47.467Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69cd3dabd59b8490049672ca"
+  },
+  "name": "moderator",
+  "displayName": "Moderator",
+  "description": "Moderator access with limited administrative permissions",
+  "permissions": [
+    {
+      "$oid": "69cd3dabd59b849004967286"
+    },
+    {
+      "$oid": "69cd3dabd59b8490049672b5"
+    },
+    {
+      "$oid": "69cd3dabd59b8490049672b8"
+    },
+    {
+      "$oid": "69cd3dabd59b8490049672bb"
+    }
+  ],
+  "isActive": true,
+  "isSystemRole": true,
+  "level": 6,
+  "createdAt": {
+    "$date": "2026-04-01T15:45:47.476Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-01T15:45:47.476Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69cd3dabd59b8490049672cd"
+  },
+  "name": "user",
+  "displayName": "User",
+  "description": "Standard user with basic permissions",
+  "permissions": [
+    {
+      "$oid": "69cd3dabd59b8490049672b5"
+    },
+    {
+      "$oid": "69cd3dabd59b8490049672b8"
+    },
+    {
+      "$oid": "69cd3dabd59b8490049672bb"
+    }
+  ],
+  "isActive": true,
+  "isSystemRole": true,
+  "level": 1,
+  "createdAt": {
+    "$date": "2026-04-01T15:45:47.492Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-01T15:45:47.492Z"
+  },
+  "__v": 0
+}]
